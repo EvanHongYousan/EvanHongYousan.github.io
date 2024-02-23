@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-WBPBHQ3');</script>
+  <!-- End Google Tag Manager -->
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+  <meta name="baidu-site-verification" content="Qf3lafOaKG">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/css/main.css?v=7.3.0">
+
+<link rel="stylesheet" href="//fonts.loli.net/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="//cdn.bootcdn.net/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-minimal.css">
+  <script src="//cdn.jsdelivr.net/npm/pace-js@1/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="keywords" content="用户增长,gatsby,activity,low code">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一份运营活动平台的概要设计草案">
+<meta property="og:url" content="https://evanhongyousan.github.io/2021/02/08/a-design-of-activity-lowcode-platform/index.html">
+<meta property="og:site_name" content="Evan&#39;s Blog | An FE developer&#39;s Blog">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://evanhongyousan.github.io/2021/02/08/a-design-of-activity-lowcode-platform/topbanner.jpg">
+<meta property="og:image" content="https://evanhongyousan.github.io/2021/02/08/a-design-of-activity-lowcode-platform/1.png">
+<meta property="og:image" content="https://evanhongyousan.github.io/2021/02/08/a-design-of-activity-lowcode-platform/2.png">
+<meta property="og:updated_time" content="2024-02-23T07:07:35.973Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="一份运营活动平台的概要设计草案">
+<meta name="twitter:image" content="https://evanhongyousan.github.io/2021/02/08/a-design-of-activity-lowcode-platform/topbanner.jpg">
+  <link rel="alternate" href="/atom.xml" title="Evan's Blog | An FE developer's Blog" type="application/atom+xml">
+  <link rel="canonical" href="https://evanhongyousan.github.io/2021/02/08/a-design-of-activity-lowcode-platform/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>一份运营活动平台的概要设计草案 | Evan's Blog | An FE developer's Blog</title>
+  <meta name="generator" content="Hexo 3.9.0">
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WBPBHQ3"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Evan's Blog | An FE developer's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档<span class="badge">52</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类<span class="badge">1</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签<span class="badge">71</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-books">
+      
+    
+      
+    
+
+    <a href="/books/" rel="section"><i class="menu-item-icon fa fa-fw fa-book"></i> <br>阅读</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-movies">
+      
+    
+      
+    
+
+    <a href="/movies/" rel="section"><i class="menu-item-icon fa fa-fw fa-film"></i> <br>电影</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-games">
+      
+    
+      
+    
+
+    <a href="/games/" rel="section"><i class="menu-item-icon fa fa-fw fa-gamepad"></i> <br>游戏</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-steam">
+      
+    
+      
+    
+
+    <a href="/steamgames/" rel="section"><i class="menu-item-icon fa fa-fw fa-brands fa-steam"></i> <br>steam</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-bangumis">
+      
+    
+      
+    
+
+    <a href="/bangumis/" rel="section"><i class="menu-item-icon fa fa-fw fa-brands fa-bilibili"></i> <br>bangumis</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-cinemas">
+      
+    
+      
+    
+
+    <a href="/cinemas/" rel="section"><i class="menu-item-icon fa fa-fw fa-brands fa-youtube"></i> <br>cinemas</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+    
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="https://evanhongyousan.github.io/2021/02/08/a-design-of-activity-lowcode-platform/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="evanhongyousan">
+      <meta itemprop="description" content="With some fe dev skills blog writed by Evan">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Evan's Blog | An FE developer's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">一份运营活动平台的概要设计草案
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2021-02-08 16:56:18" itemprop="dateCreated datePublished" datetime="2021-02-08T16:56:18+08:00">2021-02-08</time>
+            </span>
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/tech/" itemprop="url" rel="index"><span itemprop="name">tech</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            <span class="post-meta-item" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">本文字数：</span>
+              
+              <span>1.5k</span>
+            </span>
+          
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              
+              <span>2 分钟</span>
+            </span>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <img src="/2021/02/08/a-design-of-activity-lowcode-platform/topbanner.jpg" alt="topbanner.jpg" title>
+
+<a id="more"></a>
+
+<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><ul>
+<li>日益增加的运营活动类需求与有限的开发资源间，已经有越来越大的矛盾</li>
+<li>推广活动的运行模式，具备可抽象性</li>
+</ul>
+<h1 id="整体抽象"><a href="#整体抽象" class="headerlink" title="整体抽象"></a>整体抽象</h1><img src="/2021/02/08/a-design-of-activity-lowcode-platform/1.png" alt="1.png" title>
+
+<p>针对常规活动，其产出机制可大致进行如下划分：</p>
+<ol>
+<li>针对具体活动，其预算需要确认</li>
+<li>奖品确认</li>
+<li>活动规则确认（用户参与活动需要完成的任务）</li>
+<li>用户属性的限制</li>
+<li>活动载体制作（h5）与上线</li>
+<li>针对完成任务的用户，进行奖励推送</li>
+</ol>
+<p>针对上述划分的步骤，可提取出具体的服务：</p>
+<ol>
+<li>活动配置服务：针对活动涉及的交互组件进行组装，并生成活动实例；活动实例被下面各个服务实例依赖</li>
+<li>预算服务：创建预算实例，依赖活动实例；对接银行账户，且对所有活动的预算进行限制。预算实例可能是实际金额，也可能是虚拟产品</li>
+<li>奖品服务：创建奖品实例，依赖预算实例；对具体奖品进行配置与生成（现金或其他虚拟产品）</li>
+<li>规则服务：创建规则实例，依赖活动实例；对活动任务进行设置（比如用户需要完成注册/开户/入金/出金/抽奖等任务，就算是完成活动任务），用户完成任务后进行记录</li>
+<li>资格服务：创建资格实例，依赖活动实例；对参与活动的用户进行限制（地区限制，新用户/已注册用户/已开户用户 等属性限制）</li>
+<li>发奖服务：创建发奖实例，依赖活动实例；对完成任务的用户进行发奖（比如把现金发入用户账户，给用户的微信账户发微信红包，给用户的账户发虚拟产品等）</li>
+</ol>
+<p>其中，<code>规则服务</code>需要察觉用户用户完成的各项任务（登陆注册、开户、入金、出金等），会依赖登陆注册服务、开户服务、出入金服务等其他服务，这里使用<code>发布/订阅</code>模式进行机制实现：</p>
+<ol>
+<li>消息总线：团队中的其他关键服务，比如登陆注册服务、开户服务等，在用户完成具体事件后，对消息总线发出具体消息；规则服务对消息总线进行订阅，对完成事件并符合资格的用户进行记录</li>
+</ol>
+<p>另外，可能还需要一些服务：</p>
+<ol>
+<li>报名服务：创建报名实例，依赖活动实例；当需要用户通过具体活动页登陆注册后再完成任务，才能领取奖品时，需要进行用户记录</li>
+<li>抽奖服务：创建抽奖实例，依赖活动实例；对每个抽奖实例，涉及概率计算，与奖品池分配，还有可能需要动态进行奖品池调整</li>
+</ol>
+<h1 id="具体活动站点架构"><a href="#具体活动站点架构" class="headerlink" title="具体活动站点架构"></a>具体活动站点架构</h1><img src="/2021/02/08/a-design-of-activity-lowcode-platform/2.png" alt="2.png" title>
+
+<p>对于一个具体的活动页，其可复用的东西，是页面组件，以及组件在页面中的组合关系，也就是：</p>
+<ol>
+<li>组件</li>
+<li>模版</li>
+</ol>
+<p>接下来再设计好<code>使用模版生成页面</code>的调度关系，即可批量生产 h5</p>
+<p>经过简单调研，初步考虑使用 gatsby 作为静态页生成器</p>
+<p>开发人员开发出常用的活动交互组件（比如页面轮播 banner，抽奖转盘，手机注册 form 表单等）</p>
+<p>开发人员在 gatsby 的架构约束下使用模版拼装组件，然后使用模版生成实际页面；也可以使用 gatsby 对接具体的数据源，在 CMS 中进行组件拼装</p>
+<h1 id="CMS-说明"><a href="#CMS-说明" class="headerlink" title="CMS 说明"></a>CMS 说明</h1><p>CMS 需要对接活动涉及到的微服务群，比如奖品服务、发奖服务等。大部分的对接，是常见的表单输入、列表展示、详情展示，但针对<code>活动页组装</code> 组装的这部分对接，会相对复杂。</p>
+<p>针对<code>活动页组装</code>的交互，主要是 3 个点：</p>
+<ol>
+<li>组件罗列与预览：通过 npm 统一管理组件，CMS 的组件依赖需要和活动站点的组件依赖保持同步</li>
+<li>模版预览：在页面中划分出模版预览区域，区域中展示组件拼装效果</li>
+<li>组件拖拽：<code>待详细考虑</code></li>
+</ol>
+<h1 id="后续思考"><a href="#后续思考" class="headerlink" title="后续思考"></a>后续思考</h1><ol>
+<li>批量生成运营活动载体（h5）有非常明显的业务价值，但这些业务价值的具体指标，一般要如何计算<ol>
+<li>计算手工开发活动的人力成本，然后计算使用平台配置活动的人力成本，进而做对比差异</li>
+<li>计算活动运行下来的平均收益，再和上面的对比相乘，进而得出运营平台上线后的收益指标</li>
+<li>具体收益指标，都是指哪些指标？待进一步考虑</li>
+</ol>
+</li>
+<li>在打造运营活动平台（low code 平台）的过程中，开发人员要如何借此增加自身的核心竞争力（或者说，这里面最<code>硬核</code>的东西是什么）<ol>
+<li>业务抽象能力？</li>
+<li>非常明显的业务价值？</li>
+</ol>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+        
+      
+        <div id="reward-container">
+  <div>众筹开高达</div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/wechatpay.jpg" alt="evanhongyousan 微信支付">
+        <p>微信支付</p>
+      </div>
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/alipay.jpg" alt="evanhongyousan 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/用户增长/" rel="tag"><i class="fa fa-tag"></i> 用户增长</a>
+            
+              <a href="/tags/gatsby/" rel="tag"><i class="fa fa-tag"></i> gatsby</a>
+            
+              <a href="/tags/activity/" rel="tag"><i class="fa fa-tag"></i> activity</a>
+            
+              <a href="/tags/low-code/" rel="tag"><i class="fa fa-tag"></i> low code</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2020/12/02/how-https-works/" rel="next" title="【翻译】https如何工作">
+                  <i class="fa fa-chevron-left"></i> 【翻译】https如何工作
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2021/03/16/explain-profound-theories-in-simple-language-node-js/" rel="prev" title="《深入浅出node.js》小结">
+                  《深入浅出node.js》小结 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    
+  <div class="comments" id="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80NjM2MC8yMjg3MQ=="></div>
+  </div>
+  
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc" data-target="post-toc-wrap">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#整体抽象"><span class="nav-number">2.</span> <span class="nav-text">整体抽象</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#具体活动站点架构"><span class="nav-number">3.</span> <span class="nav-text">具体活动站点架构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CMS-说明"><span class="nav-number">4.</span> <span class="nav-text">CMS 说明</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#后续思考"><span class="nav-number">5.</span> <span class="nav-text">后续思考</span></a></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/avatar.jpg"
+      alt="evanhongyousan">
+  <p class="site-author-name" itemprop="name">evanhongyousan</p>
+  <div class="site-description" itemprop="description">With some fe dev skills blog writed by Evan</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">71</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/EvanHongYousan" title="GitHub &rarr; https://github.com/EvanHongYousan" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:1370204201@qq.com" title="E-Mail &rarr; mailto:1370204201@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://www.douban.com/people/185733944/" title="豆瓣 &rarr; https://www.douban.com/people/185733944/" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>豆瓣</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://steamcommunity.com/profiles/76561198254399899/" title="Steam &rarr; https://steamcommunity.com/profiles/76561198254399899/" rel="noopener" target="_blank"><i class="fa fa-fw fa-steam"></i>Steam</a>
+      </span>
+    
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2024</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">evanhongyousan</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">132k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:40</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+    <span class="post-meta-divider">|</span>
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+    
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='132' src="//cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-nest@1/canvas-nest.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.ui.min.js"></script>
+  <style>
+    .darkmode-toggle {
+      z-index: 9999;
+    }
+    img, .darkmode-ignore {
+      isolation: isolate;
+      display: block;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.3.4/lib/darkmode-js.min.js"></script>
+  <script>
+  var options = {
+    bottom: '64px', // default: '32px'
+    right: '32px', // default: '32px'
+    left: 'unset', // default: 'unset'
+    time: '0.3s', // default: '0.3s'
+    mixColor: '#fff', // default: '#fff'
+    backgroundColor: '#fff',  // default: '#fff'
+    buttonColorDark: '#100f2c',  // default: '#100f2c'
+    buttonColorLight: '#fff', // default: '#fff'
+    saveInCookies: true, // default: true,
+    label: '🌙', // default: ''🌓
+    autoMatchOsTheme: true // default: true
+  }
+  var darkmode = new Darkmode(options);
+  darkmode.showWidget();
+  </script><script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/utils.js?v=7.3.0"></script><script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/motion.js?v=7.3.0"></script>
+<script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/schemes/muse.js?v=7.3.0"></script>
+<script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/next-boot.js?v=7.3.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/local-search.js?v=7.3.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script>
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script>
+
+</body>
+</html>
