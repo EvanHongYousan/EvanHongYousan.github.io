@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-WBPBHQ3');</script>
+  <!-- End Google Tag Manager -->
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+  <meta name="baidu-site-verification" content="Qf3lafOaKG">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/css/main.css?v=7.3.0">
+
+<link rel="stylesheet" href="//fonts.loli.net/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="//cdn.bootcdn.net/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-minimal.css">
+  <script src="//cdn.jsdelivr.net/npm/pace-js@1/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="设计模式的精髓，就是解耦；而命令模式的所作的事情，就是对请求的发出者和请求的接收者进行解耦。">
+<meta name="keywords" content="设计模式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="命令模式的构建与使用">
+<meta property="og:url" content="https://evanhongyousan.github.io/2018/09/03/command-pattern/index.html">
+<meta property="og:site_name" content="Evan&#39;s Blog | An FE developer&#39;s Blog">
+<meta property="og:description" content="设计模式的精髓，就是解耦；而命令模式的所作的事情，就是对请求的发出者和请求的接收者进行解耦。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2025-01-03T07:09:24.825Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="命令模式的构建与使用">
+<meta name="twitter:description" content="设计模式的精髓，就是解耦；而命令模式的所作的事情，就是对请求的发出者和请求的接收者进行解耦。">
+  <link rel="alternate" href="/atom.xml" title="Evan's Blog | An FE developer's Blog" type="application/atom+xml">
+  <link rel="canonical" href="https://evanhongyousan.github.io/2018/09/03/command-pattern/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>命令模式的构建与使用 | Evan's Blog | An FE developer's Blog</title>
+  <meta name="generator" content="Hexo 3.9.0">
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WBPBHQ3"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Evan's Blog | An FE developer's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档<span class="badge">53</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类<span class="badge">1</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签<span class="badge">77</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-books">
+      
+    
+      
+    
+
+    <a href="/books/" rel="section"><i class="menu-item-icon fa fa-fw fa-book"></i> <br>阅读</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-movies">
+      
+    
+      
+    
+
+    <a href="/movies/" rel="section"><i class="menu-item-icon fa fa-fw fa-film"></i> <br>电影</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-games">
+      
+    
+      
+    
+
+    <a href="/games/" rel="section"><i class="menu-item-icon fa fa-fw fa-gamepad"></i> <br>游戏</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-steam">
+      
+    
+      
+    
+
+    <a href="/steamgames/" rel="section"><i class="menu-item-icon fa fa-fw fa-brands fa-steam"></i> <br>steam</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-bangumis">
+      
+    
+      
+    
+
+    <a href="/bangumis/" rel="section"><i class="menu-item-icon fa fa-fw fa-brands fa-bilibili"></i> <br>bangumis</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-cinemas">
+      
+    
+      
+    
+
+    <a href="/cinemas/" rel="section"><i class="menu-item-icon fa fa-fw fa-brands fa-youtube"></i> <br>cinemas</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+    
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="https://evanhongyousan.github.io/2018/09/03/command-pattern/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="evanhongyousan">
+      <meta itemprop="description" content="With some fe dev skills blog writed by Evan">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Evan's Blog | An FE developer's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">命令模式的构建与使用
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2018-09-03 20:06:58" itemprop="dateCreated datePublished" datetime="2018-09-03T20:06:58+08:00">2018-09-03</time>
+            </span>
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/tech/" itemprop="url" rel="index"><span itemprop="name">tech</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            <span class="post-meta-item" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">本文字数：</span>
+              
+              <span>5.1k</span>
+            </span>
+          
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              
+              <span>8 分钟</span>
+            </span>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>设计模式的精髓，就是解耦；而命令模式的所作的事情，就是对请求的发出者和请求的接收者进行解耦。</p>
+<a id="more"></a>
+
+<h2 id="命令模式使用场景"><a href="#命令模式使用场景" class="headerlink" title="命令模式使用场景"></a>命令模式使用场景</h2><p>有时候需要向某些对象发送请求，但是并不知道请求的接收者是谁，也不知道被请求的操作是什么，此时希望用一种松耦合的方式来设计软件，使得请求发送者和请求接收者能够消除彼此之间的耦合关系。</p>
+<h2 id="一个命令模式的简单例子"><a href="#一个命令模式的简单例子" class="headerlink" title="一个命令模式的简单例子"></a>一个命令模式的简单例子</h2><p>首先是几个按钮的绘制：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;body&gt;</span><br><span class="line">&lt;button id=<span class="string">"button1"</span>&gt;点击按钮 <span class="number">1</span>&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">&lt;button id="button2"&gt;点击按钮 2&lt;/</span>button&gt;</span><br><span class="line">&lt;button id=<span class="string">"button3"</span>&gt;点击按钮 <span class="number">3</span>&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>body&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line"><span class="keyword">var</span> button1 = <span class="built_in">document</span>.getElementById( <span class="string">'button1'</span> ),</span><br><span class="line"><span class="keyword">var</span> button2 = <span class="built_in">document</span>.getElementById( <span class="string">'button2'</span> ),</span><br><span class="line"><span class="keyword">var</span> button3 = <span class="built_in">document</span>.getElementById( <span class="string">'button3'</span> );</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后定义一个 setCommand 函数，setCommand 函数负责往按钮上面安装命令：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> setCommand = <span class="function"><span class="keyword">function</span> (<span class="params">button, command</span>) </span>&#123;</span><br><span class="line">  button.onclick = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    command.execute();</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>定义两个功能对象：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> MenuBar = &#123;</span><br><span class="line">  refresh: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"refresh menu"</span>);</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">var</span> SubMenu = &#123;</span><br><span class="line">  add: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"add menu"</span>);</span><br><span class="line">  &#125;,</span><br><span class="line">  del: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"del menu"</span>);</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>定义几个命令对象：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">RefreshCommand</span>(<span class="params">receiver</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.receiver = receiver;</span><br><span class="line">&#125;</span><br><span class="line">RefreshCommand.prototype.execute = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.receiver.refresh();</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">AddCommand</span>(<span class="params">receiver</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.receiver = receiver;</span><br><span class="line">&#125;</span><br><span class="line">RefreshCommand.prototype.execute = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.receiver.add();</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">DelCommand</span>(<span class="params">receiver</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.receiver = receiver;</span><br><span class="line">&#125;</span><br><span class="line">RefreshCommand.prototype.execute = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.receiver.del();</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>最后，通过命令对象，把命令接收者（功能对象）和命令请求者（按钮）联系起来：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> refreshMenuBarCommand = <span class="keyword">new</span> RefreshMenuBarCommand(MenuBar);</span><br><span class="line"><span class="keyword">var</span> addSubMenuCommand = <span class="keyword">new</span> AddSubMenuCommand(SubMenu);</span><br><span class="line"><span class="keyword">var</span> delSubMenuCommand = <span class="keyword">new</span> DelSubMenuCommand(SubMenu);</span><br><span class="line">setCommand(button1, refreshMenuBarCommand);</span><br><span class="line">setCommand(button2, addSubMenuCommand);</span><br><span class="line">setCommand(button3, delSubMenuCommand);</span><br></pre></td></tr></table></figure>
+
+<h2 id="javascript-中的命令模式"><a href="#javascript-中的命令模式" class="headerlink" title="javascript 中的命令模式"></a>javascript 中的命令模式</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> bindClick = <span class="function"><span class="keyword">function</span> (<span class="params">button, func</span>) </span>&#123;</span><br><span class="line">  button.onclick = func;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> MenuBar = &#123;</span><br><span class="line">  refresh: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"refresh menu"</span>);</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">var</span> SubMenu = &#123;</span><br><span class="line">  add: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"add menu"</span>);</span><br><span class="line">  &#125;,</span><br><span class="line">  del: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"del menu"</span>);</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line">bindClick(button1, MenuBar.refresh);</span><br><span class="line">bindClick(button2, SubMenu.add);</span><br><span class="line">bindClick(button3, SubMenu.del);</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，上面这段代码中，并没有 command 和 receiver 两个概念。</p>
+<p>原因就是，相对于简单例子中的传统命令模式实现，javascript 版命令模式实现利用了高阶函数特性(函数可作为参数被传递，函数可作为返回值被输出)。</p>
+<h2 id="撤销命令"><a href="#撤销命令" class="headerlink" title="撤销命令"></a>撤销命令</h2><p>首先是一种最简单的撤销：针对上一步的操作，再做一次’反向操作’。下面是一些简单例子的罗列：</p>
+<ol>
+<li>移动了一个 dom 元素，则作 undo 操作时，就把 dom 元素移回原来的位置（做移动操作时，需要记录下移动前的位置）</li>
+<li>输入了一段文本，则作 undo 操作时，就把输入的文本删去（做输入操作时，需要记录下当前输入的文本）</li>
+</ol>
+<p>下面是一个例子：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"ball"</span> <span class="attr">style</span>=<span class="string">"position:absolute;background:#000;width:50px;height:50px"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    输入小球移动后的位置:<span class="tag">&lt;<span class="name">input</span> <span class="attr">id</span>=<span class="string">"pos"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">"moveBtn"</span>&gt;</span>开始移动<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">"cancelBtn"</span>&gt;</span>cancel<span class="tag">&lt;/<span class="name">cancel</span>&gt;</span> <span class="comment">&lt;!--增加取消按钮--&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ball = <span class="built_in">document</span>.getElementById(<span class="string">"ball"</span>);</span><br><span class="line"><span class="keyword">var</span> pos = <span class="built_in">document</span>.getElementById(<span class="string">"pos"</span>);</span><br><span class="line"><span class="keyword">var</span> moveBtn = <span class="built_in">document</span>.getElementById(<span class="string">"moveBtn"</span>);</span><br><span class="line"><span class="keyword">var</span> MoveCommand = <span class="function"><span class="keyword">function</span> (<span class="params">receiver, pos</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.receiver = receiver;</span><br><span class="line">  <span class="keyword">this</span>.pos = pos;</span><br><span class="line">&#125;;</span><br><span class="line">MoveCommand.prototype.execute = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.receiver.start(<span class="string">"left"</span>, <span class="keyword">this</span>.pos, <span class="number">1000</span>, <span class="string">"strongEaseOut"</span>);</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">var</span> moveCommand;</span><br><span class="line">moveBtn.onclick = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> animate = <span class="keyword">new</span> Animate(ball);</span><br><span class="line">  moveCommand = <span class="keyword">new</span> MoveCommand(animate, pos.value);</span><br><span class="line">  moveCommand.execute();</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>添加一个 undo 按钮：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">"cancelBtn"</span>&gt;</span>cancel<span class="tag">&lt;/<span class="name">cancel</span>&gt;</span> <span class="comment">&lt;!--增加取消按钮--&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>添加 undo 操作：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">MoveCommand.prototype.undo = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.receiver.start(<span class="string">"left"</span>, <span class="keyword">this</span>.oldPos, <span class="number">1000</span>, <span class="string">"strongEaseOut"</span>); <span class="comment">// 回到小球移动前记录的位置</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>移动操作(execute 方法)也需要改写：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">MoveCommand.prototype.execute = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.receiver.start(<span class="string">"left"</span>, <span class="keyword">this</span>.pos, <span class="number">1000</span>, <span class="string">"strongEaseOut"</span>);</span><br><span class="line">  <span class="keyword">this</span>.oldPos = <span class="keyword">this</span>.receiver.dom.getBoundingClientRect()[</span><br><span class="line">    <span class="keyword">this</span>.receiver.propertyName</span><br><span class="line">  ];</span><br><span class="line">  <span class="number">11</span>; <span class="comment">// 记录小球开始移动前的位置</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>关联 undo 按钮和 undo 操作：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> cancelBtn = <span class="built_in">document</span>.getElementById(<span class="string">"cancelBtn"</span>);</span><br><span class="line">cancelBtn.onclick = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  moveCommand.undo();</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="撤销和重做"><a href="#撤销和重做" class="headerlink" title="撤销和重做"></a>撤销和重做</h2><p>针对撤销功能的实现，上面的是对上一步操作做反向操作，但其实我们也可以换一种思路：把整个环境初始化，然后把做过的操作重新执行一遍，执行到准备撤销的前一步操作为止。</p>
+<p>下面是一个利用重做功能去完成撤销功能的例子：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">"replay"</span>&gt;</span>播放录像<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">"undo"</span>&gt;</span>撤销上一步<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="actionscript">    <span class="keyword">var</span> Ryu = &#123;</span></span><br><span class="line"><span class="actionscript">      attack: <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span></span><br><span class="line"><span class="javascript">        <span class="built_in">console</span>.log(<span class="string">"攻击"</span>);</span></span><br><span class="line">      &#125;,</span><br><span class="line"><span class="actionscript">      defense: <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span></span><br><span class="line"><span class="javascript">        <span class="built_in">console</span>.log(<span class="string">"防御"</span>);</span></span><br><span class="line">      &#125;,</span><br><span class="line"><span class="actionscript">      jump: <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span></span><br><span class="line"><span class="javascript">        <span class="built_in">console</span>.log(<span class="string">"跳跃"</span>);</span></span><br><span class="line">      &#125;,</span><br><span class="line"><span class="actionscript">      crouch: <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span></span><br><span class="line"><span class="javascript">        <span class="built_in">console</span>.log(<span class="string">"蹲下"</span>);</span></span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line"><span class="actionscript">    <span class="keyword">var</span> makeCommand = <span class="function"><span class="keyword">function</span> <span class="params">(receiver, state)</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">      <span class="comment">// 创建命令</span></span></span><br><span class="line">      if (!state) &#123;</span><br><span class="line"><span class="actionscript">        <span class="keyword">return</span> <span class="literal">false</span>;</span></span><br><span class="line">      &#125;</span><br><span class="line"><span class="actionscript">      <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span></span><br><span class="line">        receiver[state]();</span><br><span class="line">      &#125;;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line"><span class="actionscript">    <span class="keyword">var</span> commands = &#123;</span></span><br><span class="line"><span class="actionscript">      <span class="number">119</span>: <span class="string">"jump"</span>, <span class="comment">//w</span></span></span><br><span class="line"><span class="actionscript">      <span class="number">115</span>: <span class="string">"crouch"</span>, <span class="comment">//s</span></span></span><br><span class="line"><span class="actionscript">      <span class="number">97</span>: <span class="string">"defense"</span>, <span class="comment">//a</span></span></span><br><span class="line"><span class="actionscript">      <span class="number">100</span>: <span class="string">"attack"</span>, <span class="comment">//d</span></span></span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line"><span class="actionscript">    <span class="keyword">var</span> commandStack = []; <span class="comment">// 保存命令的堆栈</span></span></span><br><span class="line"></span><br><span class="line"><span class="javascript">    <span class="built_in">document</span>.onkeypress = <span class="function"><span class="keyword">function</span> (<span class="params">ev</span>) </span>&#123;</span></span><br><span class="line"><span class="actionscript">      <span class="keyword">var</span> keyCode = ev.keyCode;</span></span><br><span class="line"><span class="actionscript">      <span class="keyword">var</span> command = makeCommand(Ryu, commands[keyCode]);</span></span><br><span class="line">      if (command) &#123;</span><br><span class="line">        command();</span><br><span class="line">        commandStack.push(command);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line"><span class="javascript">    <span class="built_in">document</span>.getElementById(<span class="string">"replay"</span>).onclick = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="actionscript">      <span class="comment">// 点击播放录像</span></span></span><br><span class="line"><span class="actionscript">      <span class="keyword">var</span> command;</span></span><br><span class="line"><span class="actionscript">      <span class="keyword">while</span> ((command = commandStack.shift())) &#123;</span></span><br><span class="line">        command();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line"><span class="javascript">    <span class="built_in">document</span>.getElementById(<span class="string">"undo"</span>).onclick = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="actionscript">      <span class="keyword">var</span> command;</span></span><br><span class="line"><span class="actionscript">      commandStack.pop(); <span class="comment">//删掉最后一步</span></span></span><br><span class="line"><span class="actionscript">      <span class="keyword">while</span> ((command = commandStack.shift())) &#123;</span></span><br><span class="line">        command();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">  <span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+        
+      
+        <div id="reward-container">
+  <div>众筹开高达</div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/wechatpay.jpg" alt="evanhongyousan 微信支付">
+        <p>微信支付</p>
+      </div>
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/alipay.jpg" alt="evanhongyousan 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/设计模式/" rel="tag"><i class="fa fa-tag"></i> 设计模式</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2018/09/03/interator-pattern/" rel="next" title="迭代器的构建和使用">
+                  <i class="fa fa-chevron-left"></i> 迭代器的构建和使用
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2018/09/03/composite-pattern/" rel="prev" title="活动页可配置化的一点探索 -- 组合模式的构建与使用">
+                  活动页可配置化的一点探索 -- 组合模式的构建与使用 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    
+  <div class="comments" id="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80NjM2MC8yMjg3MQ=="></div>
+  </div>
+  
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc" data-target="post-toc-wrap">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#命令模式使用场景"><span class="nav-number">1.</span> <span class="nav-text">命令模式使用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一个命令模式的简单例子"><span class="nav-number">2.</span> <span class="nav-text">一个命令模式的简单例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#javascript-中的命令模式"><span class="nav-number">3.</span> <span class="nav-text">javascript 中的命令模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#撤销命令"><span class="nav-number">4.</span> <span class="nav-text">撤销命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#撤销和重做"><span class="nav-number">5.</span> <span class="nav-text">撤销和重做</span></a></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/avatar.jpg"
+      alt="evanhongyousan">
+  <p class="site-author-name" itemprop="name">evanhongyousan</p>
+  <div class="site-description" itemprop="description">With some fe dev skills blog writed by Evan</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">53</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">77</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/EvanHongYousan" title="GitHub &rarr; https://github.com/EvanHongYousan" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:1370204201@qq.com" title="E-Mail &rarr; mailto:1370204201@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://www.douban.com/people/185733944/" title="豆瓣 &rarr; https://www.douban.com/people/185733944/" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>豆瓣</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://steamcommunity.com/profiles/76561198254399899/" title="Steam &rarr; https://steamcommunity.com/profiles/76561198254399899/" rel="noopener" target="_blank"><i class="fa fa-fw fa-steam"></i>Steam</a>
+      </span>
+    
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2025</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">evanhongyousan</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">139k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:52</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+    <span class="post-meta-divider">|</span>
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+    
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='132' src="//cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-nest@1/canvas-nest.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.ui.min.js"></script>
+  <style>
+    .darkmode-toggle {
+      z-index: 9999;
+    }
+    img, .darkmode-ignore {
+      isolation: isolate;
+      display: block;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.3.4/lib/darkmode-js.min.js"></script>
+  <script>
+  var options = {
+    bottom: '64px', // default: '32px'
+    right: '32px', // default: '32px'
+    left: 'unset', // default: 'unset'
+    time: '0.3s', // default: '0.3s'
+    mixColor: '#fff', // default: '#fff'
+    backgroundColor: '#fff',  // default: '#fff'
+    buttonColorDark: '#100f2c',  // default: '#100f2c'
+    buttonColorLight: '#fff', // default: '#fff'
+    saveInCookies: true, // default: true,
+    label: '🌙', // default: ''🌓
+    autoMatchOsTheme: true // default: true
+  }
+  var darkmode = new Darkmode(options);
+  darkmode.showWidget();
+  </script><script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/utils.js?v=7.3.0"></script><script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/motion.js?v=7.3.0"></script>
+<script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/schemes/muse.js?v=7.3.0"></script>
+<script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/next-boot.js?v=7.3.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/local-search.js?v=7.3.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script>
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-WBPBHQ3');</script>
+  <!-- End Google Tag Manager -->
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+  <meta name="baidu-site-verification" content="Qf3lafOaKG">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/css/main.css?v=7.3.0">
+
+<link rel="stylesheet" href="//fonts.loli.net/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="//cdn.bootcdn.net/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-minimal.css">
+  <script src="//cdn.jsdelivr.net/npm/pace-js@1/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="给项目添加测试，并不单纯只是工具使用上的变化和代码量的增加，更为本质的变化，是代码设计上的变化、开发工作模式的变化 ps: 在开始使用 typescript 的类型约束后，也会有上述变化产生">
+<meta name="keywords" content="jest,自动化测试,enzyme,test,redux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="react+react-router+react-redux项目单元测试实践记录">
+<meta property="og:url" content="https://evanhongyousan.github.io/2020/10/11/react-react-router-react-redux-unit-test/index.html">
+<meta property="og:site_name" content="Evan&#39;s Blog | An FE developer&#39;s Blog">
+<meta property="og:description" content="给项目添加测试，并不单纯只是工具使用上的变化和代码量的增加，更为本质的变化，是代码设计上的变化、开发工作模式的变化 ps: 在开始使用 typescript 的类型约束后，也会有上述变化产生">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://evanhongyousan.github.io/2020/10/11/react-react-router-react-redux-unit-test/1.png">
+<meta property="og:image" content="https://evanhongyousan.github.io/2020/10/11/react-react-router-react-redux-unit-test/unit-test-running.gif">
+<meta property="og:updated_time" content="2025-01-03T07:09:25.085Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="react+react-router+react-redux项目单元测试实践记录">
+<meta name="twitter:description" content="给项目添加测试，并不单纯只是工具使用上的变化和代码量的增加，更为本质的变化，是代码设计上的变化、开发工作模式的变化 ps: 在开始使用 typescript 的类型约束后，也会有上述变化产生">
+<meta name="twitter:image" content="https://evanhongyousan.github.io/2020/10/11/react-react-router-react-redux-unit-test/1.png">
+  <link rel="alternate" href="/atom.xml" title="Evan's Blog | An FE developer's Blog" type="application/atom+xml">
+  <link rel="canonical" href="https://evanhongyousan.github.io/2020/10/11/react-react-router-react-redux-unit-test/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>react+react-router+react-redux项目单元测试实践记录 | Evan's Blog | An FE developer's Blog</title>
+  <meta name="generator" content="Hexo 3.9.0">
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WBPBHQ3"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Evan's Blog | An FE developer's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档<span class="badge">53</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类<span class="badge">1</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签<span class="badge">77</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-books">
+      
+    
+      
+    
+
+    <a href="/books/" rel="section"><i class="menu-item-icon fa fa-fw fa-book"></i> <br>阅读</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-movies">
+      
+    
+      
+    
+
+    <a href="/movies/" rel="section"><i class="menu-item-icon fa fa-fw fa-film"></i> <br>电影</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-games">
+      
+    
+      
+    
+
+    <a href="/games/" rel="section"><i class="menu-item-icon fa fa-fw fa-gamepad"></i> <br>游戏</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-steam">
+      
+    
+      
+    
+
+    <a href="/steamgames/" rel="section"><i class="menu-item-icon fa fa-fw fa-brands fa-steam"></i> <br>steam</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-bangumis">
+      
+    
+      
+    
+
+    <a href="/bangumis/" rel="section"><i class="menu-item-icon fa fa-fw fa-brands fa-bilibili"></i> <br>bangumis</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-cinemas">
+      
+    
+      
+    
+
+    <a href="/cinemas/" rel="section"><i class="menu-item-icon fa fa-fw fa-brands fa-youtube"></i> <br>cinemas</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+    
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="https://evanhongyousan.github.io/2020/10/11/react-react-router-react-redux-unit-test/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="evanhongyousan">
+      <meta itemprop="description" content="With some fe dev skills blog writed by Evan">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Evan's Blog | An FE developer's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">react+react-router+react-redux项目单元测试实践记录
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2020-10-11 14:24:03" itemprop="dateCreated datePublished" datetime="2020-10-11T14:24:03+08:00">2020-10-11</time>
+            </span>
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/tech/" itemprop="url" rel="index"><span itemprop="name">tech</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            <span class="post-meta-item" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">本文字数：</span>
+              
+              <span>8.7k</span>
+            </span>
+          
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              
+              <span>14 分钟</span>
+            </span>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <img src="/2020/10/11/react-react-router-react-redux-unit-test/1.png" alt="1.png" title>
+
+<p>给项目添加测试，并不单纯只是工具使用上的变化和代码量的增加，更为本质的变化，是代码设计上的变化、开发工作模式的变化</p>
+<p>ps: 在开始使用 typescript 的类型约束后，也会有上述变化产生</p>
+<a id="more"></a>
+
+<h2 id="前置知识要求"><a href="#前置知识要求" class="headerlink" title="前置知识要求"></a>前置知识要求</h2><ul>
+<li>熟悉 <a href="https://reactjs.org/" target="_blank" rel="noopener">react</a></li>
+<li>熟悉 <a href="https://jestjs.io/" target="_blank" rel="noopener">jest</a></li>
+<li>熟悉 <a href="https://github.com/enzymejs/enzyme" target="_blank" rel="noopener">enzyme</a></li>
+</ul>
+<h2 id="总体分析"><a href="#总体分析" class="headerlink" title="总体分析"></a>总体分析</h2><h3 id="执行单元测试主要面对的问题"><a href="#执行单元测试主要面对的问题" class="headerlink" title="执行单元测试主要面对的问题"></a>执行单元测试主要面对的问题</h3><ul>
+<li>在实现 web 前端应用前，至少会考虑几个要点<ul>
+<li>应用运行环境：pc 浏览器？移动端浏览器？app 内 webview？</li>
+<li>应用展示内容：banner？文案？按钮？图片？等等</li>
+<li>应用交互：点击按钮发生什么？输入文字发生什么？等等</li>
+</ul>
+</li>
+<li>故对于 web 前端应用，其项目代码中，除了纯函数部分，还充斥着大量的 io 操作（service api 调用、bom api 调用、dom api）调用</li>
+<li>下面就针对上述问题，依次处理</li>
+</ul>
+<h2 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h2><h3 id="纯函数测试"><a href="#纯函数测试" class="headerlink" title="纯函数测试"></a>纯函数测试</h3><ul>
+<li>对于纯函数，只需要关注输入与输出即可</li>
+<li>通常项目中 utils 文件夹中的都是纯函数</li>
+</ul>
+<h4 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h4><ul>
+<li>utils/index.tsx</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sum</span>(<span class="params">a: number, b: number</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> a + b;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> &#123; sum &#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>utils/index.test.tsx</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; sum &#125; <span class="keyword">from</span> <span class="string">"./index"</span>;</span><br><span class="line"></span><br><span class="line">it(<span class="string">"test sum"</span>, () =&gt; &#123;</span><br><span class="line">  expect(sum(<span class="number">1</span>, <span class="number">2</span>)).toEqual(<span class="number">3</span>);</span><br><span class="line">  expect(sum(<span class="number">2</span>, <span class="number">3</span>)).toEqual(<span class="number">5</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="页面展示内容测试"><a href="#页面展示内容测试" class="headerlink" title="页面展示内容测试"></a>页面展示内容测试</h3><ul>
+<li>在 react 语境下，页面使用组件进行内容展示</li>
+<li>则开发人员需要以组件未单位进行测试</li>
+</ul>
+<h4 id="实例-1"><a href="#实例-1" class="headerlink" title="实例"></a>实例</h4><ul>
+<li>src/components/Banner/index.tsx</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">"react"</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Banner</span>(<span class="params"></span>): <span class="title">JSX</span>.<span class="title">Element</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span>Banner<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Banner;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>src/components/Banner/index.test.tsx</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">"react"</span>;</span><br><span class="line"><span class="keyword">import</span> Banner <span class="keyword">from</span> <span class="string">"./index"</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; shallow &#125; <span class="keyword">from</span> <span class="string">"enzyme"</span>;</span><br><span class="line"></span><br><span class="line">it(<span class="string">"should render correctly"</span>, () =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> wrapper = shallow(<span class="xml"><span class="tag">&lt;<span class="name">Banner</span> /&gt;</span></span>);</span><br><span class="line">  expect(wrapper.text()).toContain(<span class="string">"banner"</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="交互测试"><a href="#交互测试" class="headerlink" title="交互测试"></a>交互测试</h3><ul>
+<li>界面作为人机交互入口，直接承载用户输入与机器输出</li>
+<li>交互实际上就是用户输入和机器输出的体现</li>
+<li>下面是一个不涉及 io 操作的交互测试</li>
+</ul>
+<h4 id="实例-2"><a href="#实例-2" class="headerlink" title="实例"></a>实例</h4><ul>
+<li>src/components/Banner/index.tsx</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; useState &#125; <span class="keyword">from</span> <span class="string">"react"</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Banner</span>(<span class="params"></span>): <span class="title">JSX</span>.<span class="title">Element</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> [text, setText] = useState(<span class="string">"banner"</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> clickHandle = (): <span class="function"><span class="params">void</span> =&gt;</span> &#123;</span><br><span class="line">    setText(<span class="string">"clicked"</span>);</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &#123;text&#125;</span><br><span class="line">      &lt;button id=<span class="string">"btn"</span> onClick=&#123;clickHandle&#125;&gt;</span><br><span class="line">        click</span><br><span class="line">      &lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>div&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Banner;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>src/components/Banner/index.test.tsx</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">"react"</span>;</span><br><span class="line"><span class="keyword">import</span> Banner <span class="keyword">from</span> <span class="string">"./index"</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; shallow &#125; <span class="keyword">from</span> <span class="string">"enzyme"</span>;</span><br><span class="line"></span><br><span class="line">it(<span class="string">"click the button and change text"</span>, () =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> wrapper = shallow(<span class="xml"><span class="tag">&lt;<span class="name">Banner</span> /&gt;</span></span>);</span><br><span class="line">  expect(wrapper.text()).toContain(<span class="string">"banner"</span>);</span><br><span class="line">  wrapper.find(<span class="string">"#btn"</span>).simulate(<span class="string">"click"</span>);</span><br><span class="line">  expect(wrapper.text()).not.toContain(<span class="string">"banner"</span>);</span><br><span class="line">  expect(wrapper.text()).toContain(<span class="string">"clicked"</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="dom-操作交互测试"><a href="#dom-操作交互测试" class="headerlink" title="dom 操作交互测试"></a>dom 操作交互测试</h3><ul>
+<li>涉及 dom 操作、bom 操作、api 操作的部分，可以使用<code>mock</code></li>
+</ul>
+<h4 id="实例-3"><a href="#实例-3" class="headerlink" title="实例"></a>实例</h4><ul>
+<li>src/components/Banner/index.tsx</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; useState &#125; <span class="keyword">from</span> <span class="string">"react"</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Banner</span>(<span class="params"></span>): <span class="title">JSX</span>.<span class="title">Element</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> [text, setText] = useState(<span class="string">"banner"</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> clickHandle = (): <span class="function"><span class="params">void</span> =&gt;</span> &#123;</span><br><span class="line">    setText(<span class="string">"clicked"</span>);</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &#123;text&#125;</span><br><span class="line">      &lt;button id=<span class="string">"btn"</span> onClick=&#123;clickHandle&#125;&gt;</span><br><span class="line">        click</span><br><span class="line">      &lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button</span></span><br><span class="line"><span class="regexp">        id="jump"</span></span><br><span class="line"><span class="regexp">        onClick=&#123;(): void =&gt; &#123;</span></span><br><span class="line"><span class="regexp">          location.href = "jump success";</span></span><br><span class="line"><span class="regexp">        &#125;&#125;</span></span><br><span class="line"><span class="regexp">      &gt;</span></span><br><span class="line"><span class="regexp">        jump</span></span><br><span class="line"><span class="regexp">      &lt;/</span>button&gt;</span><br><span class="line">    &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">  );</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">export default Banner;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>src/components/Banner/index.test.tsx</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">"react"</span>;</span><br><span class="line"><span class="keyword">import</span> Banner <span class="keyword">from</span> <span class="string">"./index"</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; shallow &#125; <span class="keyword">from</span> <span class="string">"enzyme"</span>;</span><br><span class="line"></span><br><span class="line">beforeAll(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">Object</span>.defineProperty(<span class="built_in">window</span>, <span class="string">"location"</span>, &#123;</span><br><span class="line">    writable: <span class="literal">true</span>,</span><br><span class="line">    value: &#123;</span><br><span class="line">      href: <span class="string">"mock success"</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">it(<span class="string">"test jump"</span>, () =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> wrapper = shallow(<span class="xml"><span class="tag">&lt;<span class="name">Banner</span> /&gt;</span></span>);</span><br><span class="line">  expect(<span class="built_in">window</span>.location.href).toBe(<span class="string">"mock success"</span>);</span><br><span class="line">  wrapper.find(<span class="string">"#jump"</span>).simulate(<span class="string">"click"</span>);</span><br><span class="line">  expect(<span class="built_in">window</span>.location.href).toBe(<span class="string">"jump success"</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="bom-操作交互测试"><a href="#bom-操作交互测试" class="headerlink" title="bom 操作交互测试"></a>bom 操作交互测试</h3><ul>
+<li>bom 操作和 dom 类似</li>
+</ul>
+<h4 id="实例-4"><a href="#实例-4" class="headerlink" title="实例"></a>实例</h4><ul>
+<li>src/components/Banner/index.tsx</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; useState &#125; <span class="keyword">from</span> <span class="string">"react"</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Banner</span>(<span class="params"></span>): <span class="title">JSX</span>.<span class="title">Element</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> [text, setText] = useState(<span class="string">"banner"</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> clickHandle = (): <span class="function"><span class="params">void</span> =&gt;</span> &#123;</span><br><span class="line">    setText(<span class="string">"clicked"</span>);</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &#123;text&#125;</span><br><span class="line">      &lt;button id=<span class="string">"btn"</span> onClick=&#123;clickHandle&#125;&gt;</span><br><span class="line">        click</span><br><span class="line">      &lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button</span></span><br><span class="line"><span class="regexp">        id="jump"</span></span><br><span class="line"><span class="regexp">        onClick=&#123;(): void =&gt; &#123;</span></span><br><span class="line"><span class="regexp">          location.href = "jump success";</span></span><br><span class="line"><span class="regexp">        &#125;&#125;</span></span><br><span class="line"><span class="regexp">      &gt;</span></span><br><span class="line"><span class="regexp">        jump</span></span><br><span class="line"><span class="regexp">      &lt;/</span>button&gt;</span><br><span class="line">      &lt;button</span><br><span class="line">        id=<span class="string">"getUserAgent"</span></span><br><span class="line">        onClick=&#123;(): <span class="function"><span class="params">void</span> =&gt;</span> &#123;</span><br><span class="line">          setText(<span class="built_in">window</span>.navigator.userAgent);</span><br><span class="line">        &#125;&#125;</span><br><span class="line">      &gt;</span><br><span class="line">        jump</span><br><span class="line">      &lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>div&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Banner;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>src/components/Banner/index.test.tsx</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">"react"</span>;</span><br><span class="line"><span class="keyword">import</span> Banner <span class="keyword">from</span> <span class="string">"./index"</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; shallow &#125; <span class="keyword">from</span> <span class="string">"enzyme"</span>;</span><br><span class="line"></span><br><span class="line">beforeAll(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">Object</span>.defineProperty(<span class="built_in">window</span>, <span class="string">"navigator"</span>, &#123;</span><br><span class="line">    writable: <span class="literal">true</span>,</span><br><span class="line">    value: &#123;</span><br><span class="line">      userAgent: <span class="string">"get userAgent success"</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">it(<span class="string">'click "get useragen"'</span>, () =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> wrapper = shallow(<span class="xml"><span class="tag">&lt;<span class="name">Banner</span> /&gt;</span></span>);</span><br><span class="line">  wrapper.find(<span class="string">"#getUserAgent"</span>).simulate(<span class="string">"click"</span>);</span><br><span class="line">  expect(wrapper.text()).toContain(<span class="string">"get userAgent success"</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="service-api-操作交互测试"><a href="#service-api-操作交互测试" class="headerlink" title="service api 操作交互测试"></a>service api 操作交互测试</h3><ul>
+<li>api 相关的 mock 会有一点差异</li>
+</ul>
+<h4 id="实例-5"><a href="#实例-5" class="headerlink" title="实例"></a>实例</h4><ul>
+<li>src/components/Banner/index.tsx</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; useState &#125; <span class="keyword">from</span> <span class="string">"react"</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; getUserInfo &#125; <span class="keyword">from</span> <span class="string">"@/pages/card-mgmt/api"</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Banner</span>(<span class="params"></span>): <span class="title">JSX</span>.<span class="title">Element</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> [text, setText] = useState(<span class="string">"banner"</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> clickHandle = (): <span class="function"><span class="params">void</span> =&gt;</span> &#123;</span><br><span class="line">    setText(<span class="string">"clicked"</span>);</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &#123;text&#125;</span><br><span class="line">      &lt;button id=<span class="string">"btn"</span> onClick=&#123;clickHandle&#125;&gt;</span><br><span class="line">        click</span><br><span class="line">      &lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button</span></span><br><span class="line"><span class="regexp">        id="jump"</span></span><br><span class="line"><span class="regexp">        onClick=&#123;(): void =&gt; &#123;</span></span><br><span class="line"><span class="regexp">          location.href = "jump success";</span></span><br><span class="line"><span class="regexp">        &#125;&#125;</span></span><br><span class="line"><span class="regexp">      &gt;</span></span><br><span class="line"><span class="regexp">        jump</span></span><br><span class="line"><span class="regexp">      &lt;/</span>button&gt;</span><br><span class="line">      &lt;button</span><br><span class="line">        id=<span class="string">"getUserAgent"</span></span><br><span class="line">        onClick=&#123;(): <span class="function"><span class="params">void</span> =&gt;</span> &#123;</span><br><span class="line">          setText(<span class="built_in">window</span>.navigator.userAgent);</span><br><span class="line">        &#125;&#125;</span><br><span class="line">      &gt;</span><br><span class="line">        getUserAgent</span><br><span class="line">      &lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button</span></span><br><span class="line"><span class="regexp">        id="getUserInfo"</span></span><br><span class="line"><span class="regexp">        onClick=&#123;async (): Promise&lt;void&gt; =&gt; &#123;</span></span><br><span class="line"><span class="regexp">          const result = await getUserInfo();</span></span><br><span class="line"><span class="regexp">          setText(result.cnName);</span></span><br><span class="line"><span class="regexp">        &#125;&#125;</span></span><br><span class="line"><span class="regexp">      &gt;</span></span><br><span class="line"><span class="regexp">        getUserInfo</span></span><br><span class="line"><span class="regexp">      &lt;/</span>button&gt;</span><br><span class="line">    &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">  );</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">export default Banner;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>src/components/Banner/index.test.tsx</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">'react'</span></span><br><span class="line"><span class="keyword">import</span> Banner <span class="keyword">from</span> <span class="string">'./index'</span></span><br><span class="line"><span class="keyword">import</span> &#123; shallow &#125; <span class="keyword">from</span> <span class="string">'enzyme'</span></span><br><span class="line"><span class="keyword">import</span> &#123; act &#125; <span class="keyword">from</span> <span class="string">'react-dom/test-utils'</span></span><br><span class="line"></span><br><span class="line">jest.mock(<span class="string">'@/pages/card-mgmt/api'</span>, () =&gt; (&#123;</span><br><span class="line">  ...(jest.requireActual(<span class="string">'@/pages/card-mgmt/api'</span>) <span class="keyword">as</span> any),</span><br><span class="line">  getUserInfo: jest</span><br><span class="line">    .fn()</span><br><span class="line">    .mockImplementation(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">Promise</span>.resolve(&#123; <span class="attr">cnName</span>: <span class="string">'火箭'</span>, <span class="attr">enName</span>: <span class="string">'rocket'</span> &#125;))</span><br><span class="line">&#125;))</span><br><span class="line"></span><br><span class="line">it(<span class="string">'click "get userInfo"'</span>, <span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> wrapper = shallow(<span class="xml"><span class="tag">&lt;<span class="name">Banner</span> /&gt;</span></span>)</span><br><span class="line">  <span class="keyword">await</span> act(<span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">    wrapper.find(<span class="string">'#getUserInfo'</span>).simulate(<span class="string">'click'</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">  expect(wrapper.text()).toContain(<span class="string">'火箭'</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="redux-场景下组件测试"><a href="#redux-场景下组件测试" class="headerlink" title="redux 场景下组件测试"></a>redux 场景下组件测试</h2><ul>
+<li>对于使用 redux 进行状态管理的应用，必定会有组件使用 react-redux 提供的 hooks 去获取状态、更新状态</li>
+<li>根据上面的实践，明显可以看出：进行这类组件的单元测试，必须对 react-redux 的 hooks 进行 mock</li>
+<li>对此，已经有完整的 mock 工具可供使用：redux-mock-store</li>
+</ul>
+<h3 id="实例-6"><a href="#实例-6" class="headerlink" title="实例"></a>实例</h3><ul>
+<li>src/components/Banner/storeSlice.tsx</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* istanbul ignore file */</span></span><br><span class="line"><span class="comment">// TODO Test</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> &#123; createSlice &#125; <span class="keyword">from</span> <span class="string">'@reduxjs/toolkit'</span></span><br><span class="line"></span><br><span class="line">interface UserInfoType &#123;</span><br><span class="line">  cnName: string</span><br><span class="line">  enName: string</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> defaultUserInfo: UserInfoType = &#123;</span><br><span class="line">  cnName: <span class="string">''</span>,</span><br><span class="line">  enName: <span class="string">''</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> slice = createSlice(&#123;</span><br><span class="line">  name: <span class="string">'userInfo'</span>,</span><br><span class="line">  initialState: &#123;</span><br><span class="line">    userInfo: defaultUserInfo</span><br><span class="line">  &#125;,</span><br><span class="line">  reducers: &#123;</span><br><span class="line">    updateUserInfo(state, action): <span class="keyword">void</span> &#123;</span><br><span class="line">      state.userInfo = action.payload</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> &#123; updateUserInfo &#125; = slice.actions</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> selectUserInfo = (state: any): <span class="function"><span class="params">UserInfoType</span> =&gt;</span> state.userInfo.userInfo</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> slice.reducer</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>关于 storeSlice 这种写法，可以看 <a href="https://redux-toolkit.js.org/" target="_blank" rel="noopener">@reduxjs/toolkit</a></p>
+</blockquote>
+<ul>
+<li>src/components/Banner/index.tsx</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; useState &#125; <span class="keyword">from</span> <span class="string">"react"</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; getUserInfo &#125; <span class="keyword">from</span> <span class="string">"@/pages/card-mgmt/api"</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; selectUserInfo &#125; <span class="keyword">from</span> <span class="string">"./storeSlice"</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; useSelector &#125; <span class="keyword">from</span> <span class="string">"react-redux"</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Banner</span>(<span class="params"></span>): <span class="title">JSX</span>.<span class="title">Element</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> [text, setText] = useState(<span class="string">"banner"</span>);</span><br><span class="line">  <span class="comment">// 这里使用了 react-redux 的 hook</span></span><br><span class="line">  <span class="keyword">const</span> userInfo = useSelector(selectUserInfo);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> clickHandle = (): <span class="function"><span class="params">void</span> =&gt;</span> &#123;</span><br><span class="line">    setText(<span class="string">"clicked"</span>);</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &#123;text&#125;</span><br><span class="line">      &#123;userInfo.cnName&#125;</span><br><span class="line">      &#123;userInfo.enName&#125;</span><br><span class="line">      &lt;button id=<span class="string">"btn"</span> onClick=&#123;clickHandle&#125;&gt;</span><br><span class="line">        click</span><br><span class="line">      &lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button</span></span><br><span class="line"><span class="regexp">        id="jump"</span></span><br><span class="line"><span class="regexp">        onClick=&#123;(): void =&gt; &#123;</span></span><br><span class="line"><span class="regexp">          location.href = "jump success";</span></span><br><span class="line"><span class="regexp">        &#125;&#125;</span></span><br><span class="line"><span class="regexp">      &gt;</span></span><br><span class="line"><span class="regexp">        jump</span></span><br><span class="line"><span class="regexp">      &lt;/</span>button&gt;</span><br><span class="line">      &lt;button</span><br><span class="line">        id=<span class="string">"getUserAgent"</span></span><br><span class="line">        onClick=&#123;(): <span class="function"><span class="params">void</span> =&gt;</span> &#123;</span><br><span class="line">          setText(<span class="built_in">window</span>.navigator.userAgent);</span><br><span class="line">        &#125;&#125;</span><br><span class="line">      &gt;</span><br><span class="line">        getUserAgent</span><br><span class="line">      &lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button</span></span><br><span class="line"><span class="regexp">        id="getUserInfo"</span></span><br><span class="line"><span class="regexp">        onClick=&#123;async (): Promise&lt;void&gt; =&gt; &#123;</span></span><br><span class="line"><span class="regexp">          const result = await getUserInfo();</span></span><br><span class="line"><span class="regexp">          setText(result.cnName);</span></span><br><span class="line"><span class="regexp">        &#125;&#125;</span></span><br><span class="line"><span class="regexp">      &gt;</span></span><br><span class="line"><span class="regexp">        getUserInfo</span></span><br><span class="line"><span class="regexp">      &lt;/</span>button&gt;</span><br><span class="line">    &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">  );</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">export default Banner;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>src/components/Banner/index.test.tsx</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">"react"</span>;</span><br><span class="line"><span class="keyword">import</span> Banner <span class="keyword">from</span> <span class="string">"./index"</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; mount &#125; <span class="keyword">from</span> <span class="string">"enzyme"</span>;</span><br><span class="line"><span class="keyword">import</span> configureStore <span class="keyword">from</span> <span class="string">"redux-mock-store"</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; Provider &#125; <span class="keyword">from</span> <span class="string">"react-redux"</span>;</span><br><span class="line"></span><br><span class="line">it(<span class="string">"should render correctly with redux store"</span>, () =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> mockStore = configureStore([]);</span><br><span class="line">  <span class="keyword">const</span> store = mockStore(&#123;</span><br><span class="line">    userInfo: &#123;</span><br><span class="line">      userInfo: &#123;</span><br><span class="line">        cnName: <span class="string">"马马马马马马"</span>,</span><br><span class="line">        enName: <span class="string">"horsehorsehorsehorse"</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">const</span> wrapper = mount(</span><br><span class="line">    &lt;Provider store=&#123;store&#125;&gt;</span><br><span class="line">      &lt;Banner /&gt;</span><br><span class="line">    &lt;<span class="regexp">/Provider&gt;</span></span><br><span class="line"><span class="regexp">  );</span></span><br><span class="line"><span class="regexp">  expect(wrapper.text()).toContain("马");</span></span><br><span class="line"><span class="regexp">  expect(wrapper.text()).toContain("horse");</span></span><br><span class="line"><span class="regexp">&#125;);</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="前端单元测试执行套路"><a href="#前端单元测试执行套路" class="headerlink" title="前端单元测试执行套路"></a>前端单元测试执行套路</h2><p>经过一些实践后，提炼出下面三个方面的测试：</p>
+<ul>
+<li>纯函数测试：测试工具类纯函数是否符合预期</li>
+<li>展示性测试：用于测试组件内容是否正常展示，展示的各项内容是否完整、正确</li>
+<li>交互性测试：用于测试组件涉及的交互，是否可以正常输出，正常输出，并对输入、输出做校验</li>
+<li>快照测试：快照测试让开发人员明确自身对组件的修改，会有多大的波及度，具体可看<a href="https://jestjs.io/docs/en/snapshot-testing" target="_blank" rel="noopener">Snapshot Testing</a></li>
+</ul>
+<h2 id="实际运行"><a href="#实际运行" class="headerlink" title="实际运行"></a>实际运行</h2><img src="/2020/10/11/react-react-router-react-redux-unit-test/unit-test-running.gif" alt="unit-test-running.gif" title>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://jestjs.io/docs/en/getting-started" target="_blank" rel="noopener">jest doc</a></li>
+<li><a href="https://github.com/enzymejs/enzyme" target="_blank" rel="noopener">enzyme doc</a></li>
+<li><a href="https://www.xtivia.com/best-practices-for-testing-a-react-redux-toolkit-app/" target="_blank" rel="noopener">Best Practices for Testing a React/Redux Toolkit App</a></li>
+<li><a href="https://codewithhugo.com/jest-exclude-coverage/" target="_blank" rel="noopener">jest ignore or exclude file/function/statement from test coverage</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+      
+        <div id="reward-container">
+  <div>众筹开高达</div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/wechatpay.jpg" alt="evanhongyousan 微信支付">
+        <p>微信支付</p>
+      </div>
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/alipay.jpg" alt="evanhongyousan 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/jest/" rel="tag"><i class="fa fa-tag"></i> jest</a>
+            
+              <a href="/tags/自动化测试/" rel="tag"><i class="fa fa-tag"></i> 自动化测试</a>
+            
+              <a href="/tags/enzyme/" rel="tag"><i class="fa fa-tag"></i> enzyme</a>
+            
+              <a href="/tags/test/" rel="tag"><i class="fa fa-tag"></i> test</a>
+            
+              <a href="/tags/redux/" rel="tag"><i class="fa fa-tag"></i> redux</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2020/09/05/jest-test-guide-mind-map/" rel="next" title="jest测试框架官方文档要点提取">
+                  <i class="fa fa-chevron-left"></i> jest测试框架官方文档要点提取
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2020/10/30/Difference-between-enzyme-and-react-testing-library/" rel="prev" title="【翻译】enzyme 和 react-testing-library 之间的不同">
+                  【翻译】enzyme 和 react-testing-library 之间的不同 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    
+  <div class="comments" id="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80NjM2MC8yMjg3MQ=="></div>
+  </div>
+  
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc" data-target="post-toc-wrap">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前置知识要求"><span class="nav-number">1.</span> <span class="nav-text">前置知识要求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总体分析"><span class="nav-number">2.</span> <span class="nav-text">总体分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#执行单元测试主要面对的问题"><span class="nav-number">2.1.</span> <span class="nav-text">执行单元测试主要面对的问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实践"><span class="nav-number">3.</span> <span class="nav-text">实践</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#纯函数测试"><span class="nav-number">3.1.</span> <span class="nav-text">纯函数测试</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#实例"><span class="nav-number">3.1.1.</span> <span class="nav-text">实例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#页面展示内容测试"><span class="nav-number">3.2.</span> <span class="nav-text">页面展示内容测试</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#实例-1"><span class="nav-number">3.2.1.</span> <span class="nav-text">实例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#交互测试"><span class="nav-number">3.3.</span> <span class="nav-text">交互测试</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#实例-2"><span class="nav-number">3.3.1.</span> <span class="nav-text">实例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dom-操作交互测试"><span class="nav-number">3.4.</span> <span class="nav-text">dom 操作交互测试</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#实例-3"><span class="nav-number">3.4.1.</span> <span class="nav-text">实例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bom-操作交互测试"><span class="nav-number">3.5.</span> <span class="nav-text">bom 操作交互测试</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#实例-4"><span class="nav-number">3.5.1.</span> <span class="nav-text">实例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#service-api-操作交互测试"><span class="nav-number">3.6.</span> <span class="nav-text">service api 操作交互测试</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#实例-5"><span class="nav-number">3.6.1.</span> <span class="nav-text">实例</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redux-场景下组件测试"><span class="nav-number">4.</span> <span class="nav-text">redux 场景下组件测试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#实例-6"><span class="nav-number">4.1.</span> <span class="nav-text">实例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#前端单元测试执行套路"><span class="nav-number">5.</span> <span class="nav-text">前端单元测试执行套路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实际运行"><span class="nav-number">6.</span> <span class="nav-text">实际运行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/avatar.jpg"
+      alt="evanhongyousan">
+  <p class="site-author-name" itemprop="name">evanhongyousan</p>
+  <div class="site-description" itemprop="description">With some fe dev skills blog writed by Evan</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">53</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">77</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/EvanHongYousan" title="GitHub &rarr; https://github.com/EvanHongYousan" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:1370204201@qq.com" title="E-Mail &rarr; mailto:1370204201@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://www.douban.com/people/185733944/" title="豆瓣 &rarr; https://www.douban.com/people/185733944/" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>豆瓣</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://steamcommunity.com/profiles/76561198254399899/" title="Steam &rarr; https://steamcommunity.com/profiles/76561198254399899/" rel="noopener" target="_blank"><i class="fa fa-fw fa-steam"></i>Steam</a>
+      </span>
+    
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2025</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">evanhongyousan</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">139k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:52</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+    <span class="post-meta-divider">|</span>
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+    
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='132' src="//cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-nest@1/canvas-nest.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.ui.min.js"></script>
+  <style>
+    .darkmode-toggle {
+      z-index: 9999;
+    }
+    img, .darkmode-ignore {
+      isolation: isolate;
+      display: block;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.3.4/lib/darkmode-js.min.js"></script>
+  <script>
+  var options = {
+    bottom: '64px', // default: '32px'
+    right: '32px', // default: '32px'
+    left: 'unset', // default: 'unset'
+    time: '0.3s', // default: '0.3s'
+    mixColor: '#fff', // default: '#fff'
+    backgroundColor: '#fff',  // default: '#fff'
+    buttonColorDark: '#100f2c',  // default: '#100f2c'
+    buttonColorLight: '#fff', // default: '#fff'
+    saveInCookies: true, // default: true,
+    label: '🌙', // default: ''🌓
+    autoMatchOsTheme: true // default: true
+  }
+  var darkmode = new Darkmode(options);
+  darkmode.showWidget();
+  </script><script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/utils.js?v=7.3.0"></script><script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/motion.js?v=7.3.0"></script>
+<script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/schemes/muse.js?v=7.3.0"></script>
+<script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/next-boot.js?v=7.3.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/local-search.js?v=7.3.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script>
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script>
+
+</body>
+</html>

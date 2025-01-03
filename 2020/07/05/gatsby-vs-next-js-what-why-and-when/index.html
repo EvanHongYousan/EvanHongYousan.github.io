@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-WBPBHQ3');</script>
+  <!-- End Google Tag Manager -->
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+  <meta name="baidu-site-verification" content="Qf3lafOaKG">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/css/main.css?v=7.3.0">
+
+<link rel="stylesheet" href="//fonts.loli.net/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="//cdn.bootcdn.net/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-minimal.css">
+  <script src="//cdn.jsdelivr.net/npm/pace-js@1/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="好吧，首先，我离题了，我是这两个“框架”的忠实粉丝。我经常在 Twitter 或 Instagram 上看到对它们的赞赏，但是，在谈论这些工具时我被问得最多的问题是：哪个更好？ 我应该使用 Next.JS 吗？但是我听说 Gatsby 也很 🔥，也许我应该使用 Gatsby？ 因此，我想对此进行一些更深入的讨论，并希望得出一些更明确的选择。">
+<meta name="keywords" content="gatsby,翻译,next.js">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【翻译】Gatsby vs Next.JS - What, Why and When?">
+<meta property="og:url" content="https://evanhongyousan.github.io/2020/07/05/gatsby-vs-next-js-what-why-and-when/index.html">
+<meta property="og:site_name" content="Evan&#39;s Blog | An FE developer&#39;s Blog">
+<meta property="og:description" content="好吧，首先，我离题了，我是这两个“框架”的忠实粉丝。我经常在 Twitter 或 Instagram 上看到对它们的赞赏，但是，在谈论这些工具时我被问得最多的问题是：哪个更好？ 我应该使用 Next.JS 吗？但是我听说 Gatsby 也很 🔥，也许我应该使用 Gatsby？ 因此，我想对此进行一些更深入的讨论，并希望得出一些更明确的选择。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://evanhongyousan.github.io/2020/07/05/gatsby-vs-next-js-what-why-and-when/1.jpeg">
+<meta property="og:image" content="https://evanhongyousan.github.io/2020/07/05/gatsby-vs-next-js-what-why-and-when/2.gif">
+<meta property="og:image" content="https://evanhongyousan.github.io/2020/07/05/gatsby-vs-next-js-what-why-and-when/3.gif">
+<meta property="og:image" content="https://evanhongyousan.github.io/2020/07/05/gatsby-vs-next-js-what-why-and-when/4.gif">
+<meta property="og:updated_time" content="2025-01-03T07:09:25.033Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【翻译】Gatsby vs Next.JS - What, Why and When?">
+<meta name="twitter:description" content="好吧，首先，我离题了，我是这两个“框架”的忠实粉丝。我经常在 Twitter 或 Instagram 上看到对它们的赞赏，但是，在谈论这些工具时我被问得最多的问题是：哪个更好？ 我应该使用 Next.JS 吗？但是我听说 Gatsby 也很 🔥，也许我应该使用 Gatsby？ 因此，我想对此进行一些更深入的讨论，并希望得出一些更明确的选择。">
+<meta name="twitter:image" content="https://evanhongyousan.github.io/2020/07/05/gatsby-vs-next-js-what-why-and-when/1.jpeg">
+  <link rel="alternate" href="/atom.xml" title="Evan's Blog | An FE developer's Blog" type="application/atom+xml">
+  <link rel="canonical" href="https://evanhongyousan.github.io/2020/07/05/gatsby-vs-next-js-what-why-and-when/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>【翻译】Gatsby vs Next.JS - What, Why and When? | Evan's Blog | An FE developer's Blog</title>
+  <meta name="generator" content="Hexo 3.9.0">
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WBPBHQ3"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Evan's Blog | An FE developer's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档<span class="badge">53</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类<span class="badge">1</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签<span class="badge">77</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-books">
+      
+    
+      
+    
+
+    <a href="/books/" rel="section"><i class="menu-item-icon fa fa-fw fa-book"></i> <br>阅读</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-movies">
+      
+    
+      
+    
+
+    <a href="/movies/" rel="section"><i class="menu-item-icon fa fa-fw fa-film"></i> <br>电影</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-games">
+      
+    
+      
+    
+
+    <a href="/games/" rel="section"><i class="menu-item-icon fa fa-fw fa-gamepad"></i> <br>游戏</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-steam">
+      
+    
+      
+    
+
+    <a href="/steamgames/" rel="section"><i class="menu-item-icon fa fa-fw fa-brands fa-steam"></i> <br>steam</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-bangumis">
+      
+    
+      
+    
+
+    <a href="/bangumis/" rel="section"><i class="menu-item-icon fa fa-fw fa-brands fa-bilibili"></i> <br>bangumis</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-cinemas">
+      
+    
+      
+    
+
+    <a href="/cinemas/" rel="section"><i class="menu-item-icon fa fa-fw fa-brands fa-youtube"></i> <br>cinemas</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+    
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="https://evanhongyousan.github.io/2020/07/05/gatsby-vs-next-js-what-why-and-when/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="evanhongyousan">
+      <meta itemprop="description" content="With some fe dev skills blog writed by Evan">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Evan's Blog | An FE developer's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">【翻译】Gatsby vs Next.JS - What, Why and When?
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2020-07-05 18:40:57" itemprop="dateCreated datePublished" datetime="2020-07-05T18:40:57+08:00">2020-07-05</time>
+            </span>
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/tech/" itemprop="url" rel="index"><span itemprop="name">tech</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            <span class="post-meta-item" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">本文字数：</span>
+              
+              <span>2.5k</span>
+            </span>
+          
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              
+              <span>4 分钟</span>
+            </span>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <img src="/2020/07/05/gatsby-vs-next-js-what-why-and-when/1.jpeg" alt="1.jpeg" title>
+
+<p>好吧，首先，我离题了，我是这两个“框架”的忠实粉丝。我经常在 Twitter 或 Instagram 上看到对它们的赞赏，但是，在谈论这些工具时我被问得最多的问题是：哪个更好？</p>
+<p>我应该使用 Next.JS 吗？但是我听说 Gatsby 也很 🔥，也许我应该使用 Gatsby？</p>
+<p>因此，我想对此进行一些更深入的讨论，并希望得出一些更明确的选择。</p>
+<a id="more"></a>
+
+<p>让我们开始吧！</p>
+<img src="/2020/07/05/gatsby-vs-next-js-what-why-and-when/2.gif" alt="2.gif" title>
+
+<h2 id="一份对于-Gatsby-和-Next-的介绍"><a href="#一份对于-Gatsby-和-Next-的介绍" class="headerlink" title="一份对于 Gatsby 和 Next 的介绍"></a>一份对于 Gatsby 和 Next 的介绍</h2><p>那么，除了以前听人提起过但从未真正了解过的流行语外，Gatsby 和 Next 是什么？</p>
+<p>用最基本的话来说，create-react-app 会给你创建一个 React 项目的 boilerplate，而这两个框架将为你创建一个应用奠定基础。</p>
+<p>不过，他们已经脱离了 create-react-app，在某种意义上，他们并没有被归类为 boilerplate，而是工具箱，打好了基础，然后给你一套如何建造房子的说明。</p>
+<p>总结一下：</p>
+<p>create-react-app - 为 React 项目奠定基础。剩下的就看你的了。</p>
+<p>Gatsby &amp; Next - 奠定 React 项目的基础。给你指导你应该如何在它们之上构建。</p>
+<p>…</p>
+<p>可是 那很奇怪？他们俩都做…同一件事？</p>
+<p>有点。</p>
+<p>乍一看，它们看上去都非常相似：</p>
+<ul>
+<li>提供一个模板应用</li>
+<li>生成令人难以置信的高性能、可访问性和 SEO 友好型网站。</li>
+<li>创建开箱即用的单页应用。</li>
+<li>拥有非常棒的开发者体验。</li>
+</ul>
+<p>但实际上，它们有着本质上的区别。</p>
+<h2 id="服务器端渲染-vs-静态生成"><a href="#服务器端渲染-vs-静态生成" class="headerlink" title="服务器端渲染 vs 静态生成"></a>服务器端渲染 vs 静态生成</h2><img src="/2020/07/05/gatsby-vs-next-js-what-why-and-when/3.gif" alt="3.gif" title>
+
+<p>OK，我们将要开始获取一些技术知识点，请紧跟我的思路…不会很糟糕的！</p>
+<p>Gatsby 是一款静态网站生成工具。静态网站生成器在构建时生成静态 HTML。它不使用服务器。</p>
+<p>Next.JS 主要是一个服务器端渲染页面的工具。每当有新的请求进来时，它都会利用服务器动态生成 HTML。</p>
+<p>当然，两者都可以在客户端调用 API。根本的区别是 Next 需要服务器才能运行。Gatsby 完全可以在没有任何服务器的情况下运行。</p>
+<p>Gatsby 只是在构建时生成纯 HTML/CSS/JS，而 Next 则在运行时生成 HTML/CSS/JS。所以每次有新的请求进来，它都会从服务器上创建一个新的 HTML 页面。</p>
+<p>我不打算在这里太深入地了解每个人的优点和缺点，然而，为了更深入地阅读，请查看这篇文章。- <a href="https://dev.to/stereobooster/server-side-rendering-or-ssr-what-is-it-for-and-when-to-use-it-2cpg" target="_blank" rel="noopener">https://dev.to/stereobooster/server-side-rendering-or-ssr-what-is-it-for-and-when-to-use-it-2cpg</a></p>
+<h2 id="数据处理"><a href="#数据处理" class="headerlink" title="数据处理"></a>数据处理</h2><p>这两个工具之间的另一个根本区别是它们处理数据的方式。</p>
+<p>Gatsby 告诉你应该如何处理应用中的数据。</p>
+<p>Next.js 则完全由你自己来决定。</p>
+<img src="/2020/07/05/gatsby-vs-next-js-what-why-and-when/4.gif" alt="4.gif" title>
+
+<h3 id="这到底是什么意思？"><a href="#这到底是什么意思？" class="headerlink" title="这到底是什么意思？"></a>这到底是什么意思？</h3><p>Gatsby 使用的是一种叫做 GraphQL 的东西。GraphQL 是一种查询语言，如果你熟悉 SQL，它们的工作方式非常相似。用户将使用一种特殊的语法，在组件中描述用户想要的数据，然后这些数据将会被提供。</p>
+<p>当组件需要时，Gatsby 会在浏览器中提供这些数据。</p>
+<p>一个例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">"react"</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; graphql &#125; <span class="keyword">from</span> <span class="string">"gatsby"</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> (&#123; data &#125;) =&gt; (</span><br><span class="line">  &lt;div&gt;</span><br><span class="line">    &lt;h1&gt;About &#123;data.site.siteMetadata.title&#125;&lt;<span class="regexp">/h1&gt;</span></span><br><span class="line"><span class="regexp">    &lt;p&gt;We're a very cool website you should return to often.&lt;/</span>p&gt;</span><br><span class="line">  &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">);</span></span><br><span class="line"><span class="regexp">export const query = graphql`</span></span><br><span class="line"><span class="regexp">  query &#123;</span></span><br><span class="line"><span class="regexp">    site &#123;</span></span><br><span class="line"><span class="regexp">      siteMetadata &#123;</span></span><br><span class="line"><span class="regexp">        title</span></span><br><span class="line"><span class="regexp">      &#125;</span></span><br><span class="line"><span class="regexp">    &#125;</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">`;</span></span><br></pre></td></tr></table></figure>
+
+<p>在上面的例子中，你可以看到我们有一个查询来获取标题，然后在组件中显示标题。太棒了！</p>
+<p>Gatsby 还有很多针对各种数据源的插件，这（理论上）使得它很容易针对很多数据源进行整合。一些数据源插件的例子是 Contentful、Wordpress、MongoDB 和 Forestry。这允许你做一些事情，比如把你的网站挂到一个 CMS 上，并对内容进行外部控制。</p>
+<p>当为生产构建时，不再使用 GraphQL，而是将数据持久化为 JSON 文件。</p>
+<p>… 好吧，酷。</p>
+<p>Next.js 则是另一种方式：如何管理数据完全由你自己决定。你必须在自己的架构上决定如何管理数据。</p>
+<p>这样做的好处是，你不会被捆绑在任何你想或不想使用的技术上。</p>
+<h2 id="那我该怎么选择呢？"><a href="#那我该怎么选择呢？" class="headerlink" title="那我该怎么选择呢？"></a>那我该怎么选择呢？</h2><p>你应该使用 Gatsby 还是 Next，很大程度上取决于你的实际情况，因为其实他们都很酷。</p>
+<h3 id="何时使用-Next-JS"><a href="#何时使用-Next-JS" class="headerlink" title="何时使用 Next.JS"></a>何时使用 Next.JS</h3><p>如果你有很多内容，或者你希望你的内容随着时间的推移会有很大的增长，那么静态生成的网页并不是你最好的解决方案。原因是，如果你有很多内容，建立网站需要很多时间。</p>
+<p>当创建一个有数千页的非常大的应用时，重建速度会相当慢。而且如果你必须在点击发布后等待一大段时间才能上线，这不是一个完美的解决方案。</p>
+<p>因此，如果您的网站内容随着时间的推移会不断增长，那么 Next.JS 是您的最佳选择。</p>
+<p>另外，如果您希望在访问数据方面有更多的自由，那么 Next.JS 值得一提。</p>
+<p>在这里值得一提的是，Next 的文档是我见过的最好的文档。它有一个交互：在您浏览完一节内容时，会对你进行测验，以确保你能跟上:)真棒! 👏</p>
+<h3 id="何时使用-Gatsby"><a href="#何时使用-Gatsby" class="headerlink" title="何时使用 Gatsby"></a>何时使用 Gatsby</h3><p>在创建小型网站和博客时，我倾向于使用 Gatsby，这是我个人的喜好。它的生态系统非常适合连接到 CMS（简直是轻而易举），并且有一些很棒的指南，告诉你如何去使用它。</p>
+<p>在我看来，Gatsby 更容易上手和运行，这一点值得记住。同样，文档的水平也很高，里面有很多教程，可以跟着学。</p>
+<p>Gatsby 还附带了一些 “入门 “模板，以及一个相对较新的特性”主题”，这些都使得一个功能齐全的网络应用能够快速地建立和运行。</p>
+<hr>
+<p>原文: <a href="https://dev.to/jameesy/gatsby-vs-next-js-what-why-and-when-4al5" target="_blank" rel="noopener">Gatsby vs Next.JS - What, Why and When?</a></p>
+<p>作者: <a href="https://dev.to/jameesy" target="_blank" rel="noopener">James Bedford</a></p>
+<p>译者: Evan</p>
+
+    </div>
+
+    
+    
+    
+        
+      
+        <div id="reward-container">
+  <div>众筹开高达</div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/wechatpay.jpg" alt="evanhongyousan 微信支付">
+        <p>微信支付</p>
+      </div>
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/alipay.jpg" alt="evanhongyousan 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/gatsby/" rel="tag"><i class="fa fa-tag"></i> gatsby</a>
+            
+              <a href="/tags/翻译/" rel="tag"><i class="fa fa-tag"></i> 翻译</a>
+            
+              <a href="/tags/next-js/" rel="tag"><i class="fa fa-tag"></i> next.js</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2020/07/04/iframes-scroll-bug-on-ios/" rel="next" title="修复 ‘iframes 弹框无法在iOS中上下滚动’问题">
+                  <i class="fa fa-chevron-left"></i> 修复 ‘iframes 弹框无法在iOS中上下滚动’问题
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2020/09/05/jest-test-guide-mind-map/" rel="prev" title="jest测试框架官方文档要点提取">
+                  jest测试框架官方文档要点提取 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    
+  <div class="comments" id="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80NjM2MC8yMjg3MQ=="></div>
+  </div>
+  
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc" data-target="post-toc-wrap">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一份对于-Gatsby-和-Next-的介绍"><span class="nav-number">1.</span> <span class="nav-text">一份对于 Gatsby 和 Next 的介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务器端渲染-vs-静态生成"><span class="nav-number">2.</span> <span class="nav-text">服务器端渲染 vs 静态生成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据处理"><span class="nav-number">3.</span> <span class="nav-text">数据处理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#这到底是什么意思？"><span class="nav-number">3.1.</span> <span class="nav-text">这到底是什么意思？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#那我该怎么选择呢？"><span class="nav-number">4.</span> <span class="nav-text">那我该怎么选择呢？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#何时使用-Next-JS"><span class="nav-number">4.1.</span> <span class="nav-text">何时使用 Next.JS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#何时使用-Gatsby"><span class="nav-number">4.2.</span> <span class="nav-text">何时使用 Gatsby</span></a></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/avatar.jpg"
+      alt="evanhongyousan">
+  <p class="site-author-name" itemprop="name">evanhongyousan</p>
+  <div class="site-description" itemprop="description">With some fe dev skills blog writed by Evan</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">53</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">77</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/EvanHongYousan" title="GitHub &rarr; https://github.com/EvanHongYousan" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:1370204201@qq.com" title="E-Mail &rarr; mailto:1370204201@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://www.douban.com/people/185733944/" title="豆瓣 &rarr; https://www.douban.com/people/185733944/" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>豆瓣</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://steamcommunity.com/profiles/76561198254399899/" title="Steam &rarr; https://steamcommunity.com/profiles/76561198254399899/" rel="noopener" target="_blank"><i class="fa fa-fw fa-steam"></i>Steam</a>
+      </span>
+    
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2025</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">evanhongyousan</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">139k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:52</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+    <span class="post-meta-divider">|</span>
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+    
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='132' src="//cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-nest@1/canvas-nest.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.ui.min.js"></script>
+  <style>
+    .darkmode-toggle {
+      z-index: 9999;
+    }
+    img, .darkmode-ignore {
+      isolation: isolate;
+      display: block;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.3.4/lib/darkmode-js.min.js"></script>
+  <script>
+  var options = {
+    bottom: '64px', // default: '32px'
+    right: '32px', // default: '32px'
+    left: 'unset', // default: 'unset'
+    time: '0.3s', // default: '0.3s'
+    mixColor: '#fff', // default: '#fff'
+    backgroundColor: '#fff',  // default: '#fff'
+    buttonColorDark: '#100f2c',  // default: '#100f2c'
+    buttonColorLight: '#fff', // default: '#fff'
+    saveInCookies: true, // default: true,
+    label: '🌙', // default: ''🌓
+    autoMatchOsTheme: true // default: true
+  }
+  var darkmode = new Darkmode(options);
+  darkmode.showWidget();
+  </script><script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/utils.js?v=7.3.0"></script><script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/motion.js?v=7.3.0"></script>
+<script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/schemes/muse.js?v=7.3.0"></script>
+<script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/next-boot.js?v=7.3.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/local-search.js?v=7.3.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script>
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script>
+
+</body>
+</html>

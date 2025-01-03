@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-WBPBHQ3');</script>
+  <!-- End Google Tag Manager -->
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+  <meta name="baidu-site-verification" content="Qf3lafOaKG">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/css/main.css?v=7.3.0">
+
+<link rel="stylesheet" href="//fonts.loli.net/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="//cdn.bootcdn.net/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-minimal.css">
+  <script src="//cdn.jsdelivr.net/npm/pace-js@1/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="对公司而言，需要一个统一用户管理体系，其用户后续可根据相关法规协议应用于公司品牌下的其他业务。统一登录组件基础搭建，实现用户的登录、注册功能。此标准组件可以应用在品牌下下所有需要用户登录、注册的场景。">
+<meta name="keywords" content="iframe,javascript,sso,node,express,postMessage">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记录一份统一登陆注册前端组件与bff层开发方案">
+<meta property="og:url" content="https://evanhongyousan.github.io/2020/06/22/sso-dev-program/index.html">
+<meta property="og:site_name" content="Evan&#39;s Blog | An FE developer&#39;s Blog">
+<meta property="og:description" content="对公司而言，需要一个统一用户管理体系，其用户后续可根据相关法规协议应用于公司品牌下的其他业务。统一登录组件基础搭建，实现用户的登录、注册功能。此标准组件可以应用在品牌下下所有需要用户登录、注册的场景。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://evanhongyousan.github.io/2020/06/22/sso-dev-program/1.png">
+<meta property="og:image" content="https://evanhongyousan.github.io/2020/06/22/sso-dev-program/2.png">
+<meta property="og:image" content="https://evanhongyousan.github.io/2020/06/22/sso-dev-program/3.png">
+<meta property="og:image" content="https://evanhongyousan.github.io/2020/06/22/sso-dev-program/4.png">
+<meta property="og:image" content="https://evanhongyousan.github.io/2020/06/22/sso-dev-program/5.png">
+<meta property="og:image" content="https://evanhongyousan.github.io/2020/06/22/sso-dev-program/6.png">
+<meta property="og:image" content="https://evanhongyousan.github.io/2020/06/22/sso-dev-program/7.png">
+<meta property="og:image" content="https://evanhongyousan.github.io/2020/06/22/sso-dev-program/8.png">
+<meta property="og:image" content="https://evanhongyousan.github.io/2020/06/22/sso-dev-program/9.png">
+<meta property="og:updated_time" content="2025-01-03T07:09:25.029Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="记录一份统一登陆注册前端组件与bff层开发方案">
+<meta name="twitter:description" content="对公司而言，需要一个统一用户管理体系，其用户后续可根据相关法规协议应用于公司品牌下的其他业务。统一登录组件基础搭建，实现用户的登录、注册功能。此标准组件可以应用在品牌下下所有需要用户登录、注册的场景。">
+<meta name="twitter:image" content="https://evanhongyousan.github.io/2020/06/22/sso-dev-program/1.png">
+  <link rel="alternate" href="/atom.xml" title="Evan's Blog | An FE developer's Blog" type="application/atom+xml">
+  <link rel="canonical" href="https://evanhongyousan.github.io/2020/06/22/sso-dev-program/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>记录一份统一登陆注册前端组件与bff层开发方案 | Evan's Blog | An FE developer's Blog</title>
+  <meta name="generator" content="Hexo 3.9.0">
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WBPBHQ3"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Evan's Blog | An FE developer's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档<span class="badge">53</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类<span class="badge">1</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签<span class="badge">77</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-books">
+      
+    
+      
+    
+
+    <a href="/books/" rel="section"><i class="menu-item-icon fa fa-fw fa-book"></i> <br>阅读</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-movies">
+      
+    
+      
+    
+
+    <a href="/movies/" rel="section"><i class="menu-item-icon fa fa-fw fa-film"></i> <br>电影</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-games">
+      
+    
+      
+    
+
+    <a href="/games/" rel="section"><i class="menu-item-icon fa fa-fw fa-gamepad"></i> <br>游戏</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-steam">
+      
+    
+      
+    
+
+    <a href="/steamgames/" rel="section"><i class="menu-item-icon fa fa-fw fa-brands fa-steam"></i> <br>steam</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-bangumis">
+      
+    
+      
+    
+
+    <a href="/bangumis/" rel="section"><i class="menu-item-icon fa fa-fw fa-brands fa-bilibili"></i> <br>bangumis</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-cinemas">
+      
+    
+      
+    
+
+    <a href="/cinemas/" rel="section"><i class="menu-item-icon fa fa-fw fa-brands fa-youtube"></i> <br>cinemas</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+    
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="https://evanhongyousan.github.io/2020/06/22/sso-dev-program/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="evanhongyousan">
+      <meta itemprop="description" content="With some fe dev skills blog writed by Evan">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Evan's Blog | An FE developer's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">记录一份统一登陆注册前端组件与bff层开发方案
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2020-06-22 20:15:21" itemprop="dateCreated datePublished" datetime="2020-06-22T20:15:21+08:00">2020-06-22</time>
+            </span>
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/tech/" itemprop="url" rel="index"><span itemprop="name">tech</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            <span class="post-meta-item" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">本文字数：</span>
+              
+              <span>2.7k</span>
+            </span>
+          
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              
+              <span>4 分钟</span>
+            </span>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <img src="/2020/06/22/sso-dev-program/1.png" alt="1.png" title>
+
+<p>对公司而言，需要一个统一用户管理体系，其用户后续可根据相关法规协议应用于公司品牌下的其他业务。<br>统一登录组件基础搭建，实现用户的登录、注册功能。此标准组件可以应用在品牌下下所有需要用户登录、注册的场景。</p>
+<a id="more"></a>
+
+<h2 id="需求详情"><a href="#需求详情" class="headerlink" title="需求详情"></a>需求详情</h2><ul>
+<li>针对各个业务线的登陆注册行为，提供弹窗型登陆注册组件，以下是组件具体描述：</li>
+</ul>
+<h3 id="统一登陆注册模块–手机登陆注册"><a href="#统一登陆注册模块–手机登陆注册" class="headerlink" title="统一登陆注册模块–手机登陆注册"></a>统一登陆注册模块–手机登陆注册</h3><ul>
+<li>目标用户：持有香港手机号码用户</li>
+<li>场景：<ul>
+<li>移动端浏览器</li>
+<li>桌面端浏览器</li>
+</ul>
+</li>
+<li>页面内容：<ul>
+<li>可配置图片</li>
+<li>手机号输入</li>
+<li>SMS 验证码输入</li>
+<li>获取验证码按钮</li>
+<li>邮箱输入</li>
+<li>昵称输入</li>
+<li>用户协议勾选 checkbox</li>
+<li>登陆/注册按钮</li>
+</ul>
+</li>
+<li>交互点<ul>
+<li>页面语言根据 与登录前的页面语言一致</li>
+<li>手机号校验</li>
+<li>SMS 验证码校验</li>
+<li>点击验证码按钮 60 秒倒计时，弹出 toast 提示‘SMS 验证码已发送至你的手机’</li>
+<li>根据手机号是否为已注册手机号，区分用户行为为‘登陆行为’、‘注册行为’</li>
+<li>登陆行为<ul>
+<li>点击登陆按钮校验手机号、sms 验证码</li>
+<li>完成校验后登陆成功</li>
+</ul>
+</li>
+<li>注册行为<ul>
+<li>显示邮箱输入、昵称输入、用户协议勾选 checkbox</li>
+<li>邮箱后缀联想，输入@字符后，快速带出常用邮箱后缀，常用邮箱为：@gmail.com;@yahoo.com;@yahoo.com.hk; @hotmail.com</li>
+<li>点击注册按钮，校验手机号、sms 验证码、邮箱输入、昵称输入、用户协议勾选 checkbox</li>
+<li>完成校验后登陆成功</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>可配置项<ul>
+<li>banner 图（图片 url）</li>
+<li>完成登陆后的跳转链接（url），无此项配置则默认跳转 zati 首页</li>
+<li>渠道来源 sourceType</li>
+</ul>
+</li>
+</ul>
+<h3 id="统一登陆注册模块–邮箱登陆注册"><a href="#统一登陆注册模块–邮箱登陆注册" class="headerlink" title="统一登陆注册模块–邮箱登陆注册"></a>统一登陆注册模块–邮箱登陆注册</h3><ul>
+<li>目标用户：持有香港手机号码用户</li>
+<li>场景:<ul>
+<li>移动端浏览器</li>
+<li>桌面端浏览器</li>
+</ul>
+</li>
+<li>页面内容：<ul>
+<li>可配置图片</li>
+<li>邮箱输入</li>
+<li>邮箱验证码输入</li>
+<li>获取验证码按钮</li>
+<li>手机号输入 这里手机号是否要验证码校验/是否要输入手机号</li>
+<li>昵称输入</li>
+<li>用户协议勾选 checkbox</li>
+<li>登陆/注册按钮</li>
+</ul>
+</li>
+<li>交互点:<ul>
+<li>页面语言根据 与登录前的页面语言一致</li>
+<li>手机号校验</li>
+<li>SMS 验证码校验</li>
+<li>点击验证码按钮 60 秒倒计时，弹出 toast 提示‘SMS 验证码已发送至你的手机’</li>
+<li>根据手机号是否为已注册手机号，区分用户行为为‘登陆行为’、‘注册行为’</li>
+<li>登陆行为<ul>
+<li>点击登陆按钮校验手机号、sms 验证码</li>
+<li>完成校验后登陆成功</li>
+</ul>
+</li>
+<li>注册行为<ul>
+<li>显示邮箱输入、昵称输入、用户协议勾选 checkbox</li>
+<li>邮箱后缀联想，输入@字符后，快速带出常用邮箱后缀，常用邮箱为：@gmail.com;@yahoo.com;@yahoo.com.hk; @hotmail.com</li>
+<li>点击注册按钮，校验手机号、sms 验证码、邮箱输入、昵称输入、用户协议勾选 checkbox</li>
+<li>完成校验后登陆成功</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>可配置项<ul>
+<li>banner 图（图片 url）</li>
+<li>完成登陆后的跳转链接（url），无此项配置则默认跳转 zati 首页</li>
+<li>渠道来源 sourceType</li>
+</ul>
+</li>
+</ul>
+<h3 id="设置安全密码模块"><a href="#设置安全密码模块" class="headerlink" title="设置安全密码模块"></a>设置安全密码模块</h3><ul>
+<li>目标用户：已登陆用户</li>
+<li>场景：<ul>
+<li>移动端浏览器</li>
+<li>桌面端浏览器</li>
+</ul>
+</li>
+<li>页面内容：<ul>
+<li>title</li>
+<li>用户手机号</li>
+<li>手机验证码输入</li>
+<li>获取验证码按钮</li>
+<li>安全密码输入框</li>
+<li>密码描述</li>
+<li>重设密码按钮</li>
+</ul>
+</li>
+<li>交互点<ul>
+<li>页面语言国际化</li>
+<li>SMS 验证码校验</li>
+<li>点击验证码按钮 60 秒倒计时，弹出 toast 提示‘SMS 验证码已发送至你的手机’</li>
+<li>校验安全密码格式</li>
+<li>设置完毕传递完成事件</li>
+</ul>
+</li>
+</ul>
+<h3 id="安全密码验证模块"><a href="#安全密码验证模块" class="headerlink" title="安全密码验证模块"></a>安全密码验证模块</h3><ul>
+<li>目标用户：已登陆用户</li>
+<li>场景：<ul>
+<li>移动端浏览器</li>
+<li>桌面端浏览器</li>
+</ul>
+</li>
+<li>页面内容：<ul>
+<li>title</li>
+<li>安全密码输入框</li>
+<li>确定按钮</li>
+</ul>
+</li>
+<li>交互点<ul>
+<li>页面语言国际化</li>
+<li>密码校验</li>
+</ul>
+</li>
+</ul>
+<h3 id="登出"><a href="#登出" class="headerlink" title="登出"></a>登出</h3><ul>
+<li>目标用户：已登陆用户</li>
+<li>场景：<ul>
+<li>移动端浏览器</li>
+<li>桌面端浏览器</li>
+</ul>
+</li>
+<li>功能：<ul>
+<li>调用登出接口</li>
+<li>清除登陆态相关 cookie</li>
+</ul>
+</li>
+</ul>
+<h2 id="分析与设计"><a href="#分析与设计" class="headerlink" title="分析与设计"></a>分析与设计</h2><h3 id="关键点"><a href="#关键点" class="headerlink" title="关键点"></a>关键点</h3><ul>
+<li>统一登陆注册逻辑收拢，则鉴权行为需要被 统一登陆注册组件/buff/服务 收拢，各业务站点不再关注登陆注册逻辑，只关注通过登陆注册组件获取到的票据（token/ticket）</li>
+<li>各业务站点在不同的网络策略下，其服务层（node）无法直接调用综合金融注册服务</li>
+<li>需要满足“弹窗登陆注册”体验，避免“页面跳转型登陆注册”</li>
+</ul>
+<h3 id="方案选型"><a href="#方案选型" class="headerlink" title="方案选型"></a>方案选型</h3><h4 id="方案一"><a href="#方案一" class="headerlink" title="方案一"></a>方案一</h4><ul>
+<li>构建统一登陆站点，收拢登陆注册逻辑</li>
+<li>统一登陆站点提供登陆注册页面，此页面可实现常见的跳转型登陆注册行为</li>
+<li>向各业务线提供登陆注册 ui 组件，组件通过 iframe 载入统一登陆站点登陆注册页</li>
+<li>登陆注册组件与 iframe 中的页面，通过 postmessage api 实现通信</li>
+<li>各业务线站点引用登陆注册组件获取到票据，业务线站点及后端服务凭借票据至综合金融注册服务获取数据</li>
+</ul>
+<img src="/2020/06/22/sso-dev-program/2.png" alt="2.png" title>
+
+<h4 id="方案二"><a href="#方案二" class="headerlink" title="方案二"></a>方案二</h4><ul>
+<li>构建统一登陆站点，收拢登陆注册逻辑</li>
+<li>统一登陆站点提供登陆注册相关接口，接口配置允许跨域调用 header 头</li>
+<li>向各业务线提供登陆注册 ui 组件，ui 组件跨域调用统一登陆站点登陆注册相关接口</li>
+<li>各业务线站点引用登陆注册组件获取到票据，业务线站点及后端服务凭借票据至综合金融注册服务获取数据</li>
+</ul>
+<img src="/2020/06/22/sso-dev-program/3.png" alt="3.png" title>
+
+<h4 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h4><ul>
+<li>方案一和方案二都需要统一登陆 bff 层作为支撑，且两方案需要的 bff 层实现差异不大</li>
+<li>方案一和方案二都可接入国际化文案平台：<ul>
+<li>方案一组件为同源调用文案接口</li>
+<li>方案二组件为跨域调用文案接口</li>
+</ul>
+</li>
+<li>方案一的一个实现细节点为：弹框调用 iframe 载入登陆注册页，这种弹框在 iOS 移动端中可能有样式异常<ul>
+<li>这里会有解决样式异常的成本</li>
+<li>若解决不了，在 ios 移动端可考虑切换为‘页面跳转登陆注册’形式</li>
+</ul>
+</li>
+<li>方案二中组件调用 统一登陆 bff 接口皆为跨域调用</li>
+<li>更新登陆注册模块时<ul>
+<li>采用方案一，大部分情况下更新 统一登陆站点即可</li>
+<li>采用方案二，所有使用组件的业务站点都需要重新发版，以更新组件</li>
+</ul>
+</li>
+<li>方案一和方案二，都依赖 统一登陆 bff 层；一旦 bff 层挂掉，则所有对接了统一登陆注册的业务都挂掉</li>
+<li>postMessage 无法在 ie11 使用，此时需要降级处理</li>
+</ul>
+<h4 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h4><ul>
+<li>采用方案一</li>
+</ul>
+<h4 id="实现拆解"><a href="#实现拆解" class="headerlink" title="实现拆解"></a>实现拆解</h4><ul>
+<li>构建 统一登陆 站点项目，提供登陆注册页面、登陆注册相关接口支持</li>
+<li>构建 passport ui 组件，供各业务站点调用登陆注册</li>
+</ul>
+<h2 id="技术选型"><a href="#技术选型" class="headerlink" title="技术选型"></a>技术选型</h2><ul>
+<li>react hooks：前端代码编程范式</li>
+<li>next：ssr 架构</li>
+<li>express：服务层架构</li>
+</ul>
+<h2 id="引入的组件与服务"><a href="#引入的组件与服务" class="headerlink" title="引入的组件与服务"></a>引入的组件与服务</h2><ul>
+<li>前端项目脚手架</li>
+<li>组件</li>
+<li>antd 组件库</li>
+<li>服务<ul>
+<li>国际化文案服务</li>
+<li>注册服务</li>
+</ul>
+</li>
+<li>发布平台<ul>
+<li>私有 npm</li>
+<li>容器云 boom（docker 技术线）</li>
+</ul>
+</li>
+<li>注意<ul>
+<li>脚手架中 sentry 部分需要拆掉（有安全风险）</li>
+</ul>
+</li>
+</ul>
+<h2 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h2><h3 id="bff-层"><a href="#bff-层" class="headerlink" title="bff 层"></a>bff 层</h3><ul>
+<li>国际化文案接口</li>
+<li>获取验证码</li>
+<li>注册/登录接口</li>
+<li>账户升级接口</li>
+</ul>
+<p>以上接口参数与 page path 和下面服务参数保持一致</p>
+<h3 id="国际化文案平台服务"><a href="#国际化文案平台服务" class="headerlink" title="国际化文案平台服务"></a>国际化文案平台服务</h3><ul>
+<li>国际化文案接口</li>
+</ul>
+<h3 id="注册服务"><a href="#注册服务" class="headerlink" title="注册服务"></a>注册服务</h3><ul>
+<li>获取验证码</li>
+<li>注册/登录接口</li>
+<li>账户升级接口</li>
+<li>用户退出登录</li>
+<li>查询用户信息接口</li>
+</ul>
+<h2 id="关键逻辑流程"><a href="#关键逻辑流程" class="headerlink" title="关键逻辑流程"></a>关键逻辑流程</h2><h3 id="登陆注册页整体逻辑"><a href="#登陆注册页整体逻辑" class="headerlink" title="登陆注册页整体逻辑"></a>登陆注册页整体逻辑</h3><p><a href="https://mermaid-js.github.io/mermaid-live-editor/#/edit/eyJjb2RlIjoiZ3JhcGggVERcbuW8gOWniyAgLS0-IGxvZ2luRGlhbG9nW-iwg-i1t-eZu-mZhuazqOWGjOW8ueahhl1cbmxvZ2luRGlhbG9nIC0tPiB86YCJ5oup5omL5py6dGFifCBwaG9uZVRhYlvmiYvmnLp0YWJdXG5sb2dpbkRpYWxvZyAtLT4gfOmAieaLqemCrueusXRhYnwgZW1haWxUYWJb6YKu566xdGFiXVxucGhvbmVUYWIgLS0-IHNlbmRQaG9uZUNvZGVb6aqM6K-B56CB5o6l5Y-jXVxuc2VuZFBob25lQ29kZSAtLT4gaXNQaG9uZUxvZ2lue-aJi-acuuaYr-WQpuW3suazqOWGjH1cbmlzUGhvbmVMb2dpbiAtLT4gfHllc3wgcGhvbmVMb2dpblvmiYvmnLrnmbvpmYbmtYHnqItdXG5pc1Bob25lTG9naW4gLS0-IHxub3wgaXNaQVRJT1JaQUxJRkV75piv5ZCmIFpBVEkg55So5oi35oiWWkEgbGlmZeeUqOaIt31cbmlzWkFUSU9SWkFMSUZFIC0tPiB8bm98IHBob25lUmVnaXN0ZXJb5omL5py65rOo5YaM5rWB56iLXVxuaXNaQVRJT1JaQUxJRkUgLS0-IHx5ZXN8IHVwR3JhZGVQYWdlW-i0puaIt-WNh-e6p-aooeWdl11cbnVwR3JhZGVQYWdlIC0tPiB856Gu6K6k5Y2H57qnfCBnZXRUb2tlblvojrflj5bnmbvpmYbnpajmja5dXG5waG9uZVJlZ2lzdGVyIC0tPiBnZXRUb2tlblxucGhvbmVMb2dpbiAtLT4gZ2V0VG9rZW5cbmVtYWlsVGFiIC0tPiBzZW5kRW1haWxDb2RlW-mqjOivgeeggeaOpeWPo11cbnNlbmRFbWFpbENvZGUgLS0-IGlzRW1haWxMb2dpbnvpgq7nrrHmmK_lkKblt7Lms6jlhox9XG5pc0VtYWlsTG9naW4gLS0-IHx5ZXN8IGVtYWlsTG9naW5b6YKu566x55m76ZmG5rWB56iLXVxuZW1haWxMb2dpbiAtLT4gZ2V0VG9rZW5cbmlzRW1haWxMb2dpbiAtLT4gfG5vfCBpc1pBVElPUlpBTElGRTJ75piv5ZCmIFpBVEkg55So5oi35oiWWkEgbGlmZeeUqOaIt31cbmlzWkFUSU9SWkFMSUZFMiAtLT4gfG5vfCBlbWFpbFJlZ2lzdGVyW-mCrueuseazqOWGjOa1geeoi11cbmlzWkFUSU9SWkFMSUZFMiAtLT4gfHllc3wgdXBHcmFkZVBhZ2UyW-i0puaIt-WNh-e6p-aooeWdl11cbmVtYWlsUmVnaXN0ZXIgIC0tPiBnZXRUb2tlblxudXBHcmFkZVBhZ2UyIC0tPiB856Gu6K6k5Y2H57qnfCBnZXRUb2tlblxuZ2V0VG9rZW4gLS0-IOe7k-adnyIsIm1lcm1haWQiOnsidGhlbWUiOiJkZWZhdWx0In0sInVwZGF0ZUVkaXRvciI6ZmFsc2V9" target="_blank" rel="noopener">登陆注册页整体逻辑 mermaid 图</a></p>
+<img src="/2020/06/22/sso-dev-program/4.png" alt="4.png" title>
+
+<h3 id="登陆注册行为时序图"><a href="#登陆注册行为时序图" class="headerlink" title="登陆注册行为时序图"></a>登陆注册行为时序图</h3><p><a href="https://mermaid-js.github.io/mermaid-live-editor/#/edit/eyJjb2RlIjoic2VxdWVuY2VEaWFncmFtXG4gICAg55So5oi3IC0-PiDkuJrliqHnur93ZWJwYWdlOiDlkK_liqjnmbvpmYbms6jlhoxcblx05Lia5Yqh57q_d2VicGFnZS0tPj4r55m76ZmG5rOo5YaM57uE5Lu2OiDosIPotbdcbiAgICDnmbvpmYbms6jlhoznu4Tku7YgLS0-PitpZnJhbWU6IOiwg-i1t1xuICAgIGlmcmFtZSAtPj4gLXphaWYuemEuZ3JvdXAg55m76ZmG5rOo5YaM6aG16Z2iOiDovb3lhaVcbiAgICDnlKjmiLcgLT4-IHphaWYuemEuZ3JvdXAg55m76ZmG5rOo5YaM6aG16Z2iOiDov5vooYznmbvpmYbms6jlhozooYzkuLpcbiAgICBhbHQg55m76ZmG5rOo5YaM5o6l5Y-j6LCD55So5aSx6LSlXG4gICAgICAgIHphaWYuemEuZ3JvdXAg55m76ZmG5rOo5YaM6aG16Z2iIC0-PiDnmbvpmYbms6jlhoznu4Tku7Y6IHBvc3RtZXNzYWdlIGFwaSDkvKDpgJLlpLHotKXkuovku7ZcbiAgICAgICAg55m76ZmG5rOo5YaM57uE5Lu2IC0-PiDkuJrliqHnur93ZWJwYWdlOiDnmbvpmYbms6jlhozlpLHotKXkuovku7ZcbiAgICAgICAg5Lia5Yqh57q_d2VicGFnZSAtPj4g55So5oi3OiDmmL7npLrnmbvpmYblpLHotKXnirbmgIFcbiAgICBlbHNlIOeZu-mZhuazqOWGjOaOpeWPo-iwg-eUqOaIkOWKn1xuICAgICAgICB6YWlmLnphLmdyb3VwIOeZu-mZhuazqOWGjOmhtemdoiAtPj4g55m76ZmG5rOo5YaM57uE5Lu2OiBwb3N0bWVzc2FnZSBhcGkg5Lyg6YCS5oiQ5Yqf5LqL5Lu244CB55m76ZmG5oCB56Wo5o2uXG4gICAgICAgIOeZu-mZhuazqOWGjOe7hOS7tiAtPj4g5Lia5Yqh57q_d2VicGFnZTog55m76ZmG5rOo5YaM5oiQ5Yqf5LqL5Lu244CB55m76ZmG5oCB56Wo5o2u77yM5ZCM5pe25oqK55m76ZmG5oCB56Wo5o2u5YaZ5YWlY29va2llXG4gICAgICAgIOS4muWKoee6v3dlYnBhZ2UgLT4-IOeUqOaItzog5pi-56S655m76ZmG5oiQ5Yqf54q25oCBXG4gICAgZW5kIiwibWVybWFpZCI6eyJ0aGVtZSI6ImRlZmF1bHQifSwidXBkYXRlRWRpdG9yIjpmYWxzZX0" target="_blank" rel="noopener">登陆注册行为时序图</a></p>
+<img src="/2020/06/22/sso-dev-program/5.png" alt="5.png" title>
+
+<h3 id="安全密码设置页展示逻辑"><a href="#安全密码设置页展示逻辑" class="headerlink" title="安全密码设置页展示逻辑"></a>安全密码设置页展示逻辑</h3><p><a href="https://mermaid-js.github.io/mermaid-live-editor/#/edit/eyJjb2RlIjoiZ3JhcGggVERcbnN0YXJ0IC0tPiBnZXRVc2VySW5mb1vosIPnlKjojrflj5bnlKjmiLfkv6Hmga_mjqXlj6NdXG5nZXRVc2VySW5mbyAtLT5pc0xvZ2lue-aYr-WQpuacieeZu-mZhuaAgX1cbmlzTG9naW4gLS0-IHxub3wganVtcExvZ2luW-i3s-i9rOiHs-eZu-mZhuazqOWGjOmhtV1cbmp1bXBMb2dpbiAtLT4gb3ZlclxuaXNMb2dpbiAtLT4gaXNTZWN1cml0eVvmmK_lkKbnu4_ov4flronlhajlr4bnoIHpqozor4FdXG5pc1NlY3VyaXR5IC0tPiB8bm98IGp1bXBTZWN1cml0eVvot7Povazoh7Plronlhajlr4bnoIHpqozor4FdXG5qdW1wU2VjdXJpdHkgLS0-IG92ZXJcbmlzU2VjdXJpdHkgLS0-IHx5ZXN8IHNob3dOb3JtYWxb5bGV56S65a6J5YWo5a-G56CB6L6T5YWl5qGGXVxuc2hvd05vcm1hbCAtLT4gb3ZlclxuIiwibWVybWFpZCI6eyJ0aGVtZSI6ImRlZmF1bHQifSwidXBkYXRlRWRpdG9yIjpmYWxzZX0" target="_blank" rel="noopener">安全密码设置页展示逻辑</a></p>
+<img src="/2020/06/22/sso-dev-program/6.png" alt="6.png" title>
+
+<h3 id="安全密码设置时序图"><a href="#安全密码设置时序图" class="headerlink" title="安全密码设置时序图"></a>安全密码设置时序图</h3><p><a href="https://mermaid-js.github.io/mermaid-live-editor/#/edit/eyJjb2RlIjoic2VxdWVuY2VEaWFncmFtXG4gICAg55So5oi3IC0-PiDkuJrliqHnur93ZWJwYWdlOiDlkK_liqjlronlhajlr4bnoIHorr7nva5cblx05Lia5Yqh57q_d2VicGFnZS0tPj4remFwYXNzcG9ydOe7hOS7tjog6LCD6LW3XG4gICAgemFwYXNzcG9ydOe7hOS7tiAtLT4-K2lmcmFtZTog6LCD6LW3XG4gICAgaWZyYW1lIC0-PiB6YWlmLnphLmdyb3VwIOWuieWFqOWvhueggeiuvue9rumhtemdojog6L295YWlXG4gICAg55So5oi3IC0-PiB6YWlmLnphLmdyb3VwIOWuieWFqOWvhueggeiuvue9rumhtemdojog6L-b6KGM5a6J5YWo5a-G56CB6K6-572u6KGM5Li6XG4gICAgYWx0IOWuieWFqOWvhueggeiuvue9ruaOpeWPo-iwg-eUqOWksei0pVxuICAgICAgICB6YWlmLnphLmdyb3VwIOWuieWFqOWvhueggeiuvue9rumhtemdoiAtPj4gemFwYXNzcG9ydOe7hOS7tjogcG9zdG1lc3NhZ2UgYXBpIOS8oOmAkuWksei0peS6i-S7tlxuICAgICAgICB6YXBhc3Nwb3J057uE5Lu2IC0-PiDkuJrliqHnur93ZWJwYWdlOiDlronlhajlr4bnoIHorr7nva7lpLHotKXkuovku7ZcbiAgICAgICAg5Lia5Yqh57q_d2VicGFnZSAtPj4g55So5oi3OiDmmL7npLrlronlhajlr4bnoIHorr7nva7lpLHotKXnirbmgIFcbiAgICBlbHNlIOWuieWFqOWvhueggeiuvue9ruaOpeWPo-iwg-eUqOaIkOWKn1xuICAgICAgICB6YWlmLnphLmdyb3VwIOWuieWFqOWvhueggeiuvue9rumhtemdoiAtPj4gemFwYXNzcG9ydOe7hOS7tjogcG9zdG1lc3NhZ2UgYXBpIOS8oOmAkuaIkOWKn-S6i-S7tlxuICAgICAgICB6YXBhc3Nwb3J057uE5Lu2IC0-PiDkuJrliqHnur93ZWJwYWdlOiDlronlhajlr4bnoIHorr7nva7miJDlip_kuovku7ZcbiAgICAgICAg5Lia5Yqh57q_d2VicGFnZSAtPj4g55So5oi3OiDmmL7npLrlronlhajlr4bnoIHorr7nva7miJDlip_nirbmgIFcbiAgICBlbmQiLCJtZXJtYWlkIjp7InRoZW1lIjoiZGVmYXVsdCJ9LCJ1cGRhdGVFZGl0b3IiOmZhbHNlfQ" target="_blank" rel="noopener">安全密码设置时序图</a></p>
+<img src="/2020/06/22/sso-dev-program/7.png" alt="7.png" title>
+
+<h3 id="安全密码验证页展示逻辑"><a href="#安全密码验证页展示逻辑" class="headerlink" title="安全密码验证页展示逻辑"></a>安全密码验证页展示逻辑</h3><p><a href="https://mermaid-js.github.io/mermaid-live-editor/#/edit/eyJjb2RlIjoiZ3JhcGggVERcbnN0YXJ0IC0tPiBnZXRVc2VySW5mb1vosIPnlKjojrflj5bnlKjmiLfkv6Hmga_mjqXlj6NdXG5nZXRVc2VySW5mbyAtLT5pc0xvZ2lue-aYr-WQpuacieeZu-mZhuaAgX1cbmlzTG9naW4gLS0-IHxub3wganVtcExvZ2luW-i3s-i9rOiHs-eZu-mZhuazqOWGjOmhtV1cbmp1bXBMb2dpbiAtLT4gb3ZlclxuaXNMb2dpbiAtLT4gaXNTZWN1cml0eVs15YiG6ZKf5YaF5piv5ZCm57uP6L-H5a6J5YWo5a-G56CB6aqM6K-BXVxuaXNTZWN1cml0eSAtLT4gfG5vfCBzaG93Tm9ybWFsW-WxleekuuWuieWFqOWvhueggei-k-WFpeahhl1cbmlzU2VjdXJpdHkgLS0-IHx5ZXN8IGp1bXBUYXJnZXRb6Lez6L2s6Iez6L-b5YWl5YmN55qE6aG16Z2iXVxuc2hvd05vcm1hbCAtLT4gb3ZlclxuanVtcFRhcmdldCAtLT4gb3ZlclxuIiwibWVybWFpZCI6eyJ0aGVtZSI6ImRlZmF1bHQifSwidXBkYXRlRWRpdG9yIjpmYWxzZX0" target="_blank" rel="noopener">安全密码验证页展示逻辑</a></p>
+<img src="/2020/06/22/sso-dev-program/8.png" alt="8.png" title>
+
+<h3 id="安全密码验证时序图"><a href="#安全密码验证时序图" class="headerlink" title="安全密码验证时序图"></a>安全密码验证时序图</h3><p><a href="https://mermaid-js.github.io/mermaid-live-editor/#/edit/eyJjb2RlIjoic2VxdWVuY2VEaWFncmFtXG4gICAg55So5oi3IC0-PiDkuJrliqHnur93ZWJwYWdlOiDlkK_liqjlronlhajlr4bnoIHpqozor4Fcblx05Lia5Yqh57q_d2VicGFnZS0tPj4remFwYXNzcG9ydOe7hOS7tjog6LCD6LW3XG4gICAgemFwYXNzcG9ydOe7hOS7tiAtLT4-K2lmcmFtZTog6LCD6LW3XG4gICAgaWZyYW1lIC0-PiB6YWlmLnphLmdyb3VwIOWuieWFqOWvhueggemqjOivgemhtemdojog6L295YWlXG4gICAg55So5oi3IC0-PiB6YWlmLnphLmdyb3VwIOWuieWFqOWvhueggemqjOivgemhtemdojog6L-b6KGM5a6J5YWo5a-G56CB6aqM6K-B6KGM5Li6XG4gICAgYWx0IOWuieWFqOWvhueggemqjOivgeaOpeWPo-iwg-eUqOWksei0pVxuICAgICAgICB6YWlmLnphLmdyb3VwIOWuieWFqOWvhueggemqjOivgemhtemdoiAtPj4gemFwYXNzcG9ydOe7hOS7tjogcG9zdG1lc3NhZ2UgYXBpIOS8oOmAkuWksei0peS6i-S7tlxuICAgICAgICB6YXBhc3Nwb3J057uE5Lu2IC0-PiDkuJrliqHnur93ZWJwYWdlOiDlronlhajlr4bnoIHpqozor4HlpLHotKXkuovku7ZcbiAgICAgICAg5Lia5Yqh57q_d2VicGFnZSAtPj4g55So5oi3OiDmmL7npLrlronlhajlr4bnoIHpqozor4HlpLHotKXnirbmgIFcbiAgICBlbHNlIOWuieWFqOWvhueggemqjOivgeaOpeWPo-iwg-eUqOaIkOWKn1xuICAgICAgICB6YWlmLnphLmdyb3VwIOWuieWFqOWvhueggemqjOivgemhtemdoiAtPj4gemFwYXNzcG9ydOe7hOS7tjogcG9zdG1lc3NhZ2UgYXBpIOS8oOmAkuaIkOWKn-S6i-S7tlxuICAgICAgICB6YXBhc3Nwb3J057uE5Lu2IC0-PiDkuJrliqHnur93ZWJwYWdlOiDlronlhajlr4bnoIHpqozor4HmiJDlip_kuovku7ZcbiAgICAgICAg5Lia5Yqh57q_d2VicGFnZSAtPj4g55So5oi3OiDmmL7npLrlronlhajlr4bnoIHpqozor4HmiJDlip_nirbmgIFcbiAgICBlbmQiLCJtZXJtYWlkIjp7InRoZW1lIjoiZGVmYXVsdCJ9LCJ1cGRhdGVFZGl0b3IiOmZhbHNlfQ" target="_blank" rel="noopener">安全密码验证时序图</a></p>
+<img src="/2020/06/22/sso-dev-program/9.png" alt="9.png" title>
+
+<h2 id="打包方案"><a href="#打包方案" class="headerlink" title="打包方案"></a>打包方案</h2><ul>
+<li>略</li>
+</ul>
+<h2 id="资源缓存处理方案"><a href="#资源缓存处理方案" class="headerlink" title="资源缓存处理方案"></a>资源缓存处理方案</h2><ul>
+<li>略</li>
+</ul>
+<h2 id="安全"><a href="#安全" class="headerlink" title="安全"></a>安全</h2><h3 id="XSS"><a href="#XSS" class="headerlink" title="XSS"></a>XSS</h3><h4 id="国际化文案获取"><a href="#国际化文案获取" class="headerlink" title="国际化文案获取"></a>国际化文案获取</h4><ul>
+<li>原获取方式：JSONP 调用接口方式获取文案：需要防止参数注入</li>
+<li>新方式：暂无</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+      
+        <div id="reward-container">
+  <div>众筹开高达</div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/wechatpay.jpg" alt="evanhongyousan 微信支付">
+        <p>微信支付</p>
+      </div>
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/alipay.jpg" alt="evanhongyousan 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/iframe/" rel="tag"><i class="fa fa-tag"></i> iframe</a>
+            
+              <a href="/tags/javascript/" rel="tag"><i class="fa fa-tag"></i> javascript</a>
+            
+              <a href="/tags/sso/" rel="tag"><i class="fa fa-tag"></i> sso</a>
+            
+              <a href="/tags/node/" rel="tag"><i class="fa fa-tag"></i> node</a>
+            
+              <a href="/tags/express/" rel="tag"><i class="fa fa-tag"></i> express</a>
+            
+              <a href="/tags/postMessage/" rel="tag"><i class="fa fa-tag"></i> postMessage</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2020/05/23/landing-page-builder-introduct/" rel="next" title="landing page builder 工作流描述与landing page builder 选型">
+                  <i class="fa fa-chevron-left"></i> landing page builder 工作流描述与landing page builder 选型
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2020/06/26/hexo-next-github-page-performance/" rel="prev" title="hexo next github page 性能优化记录">
+                  hexo next github page 性能优化记录 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    
+  <div class="comments" id="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80NjM2MC8yMjg3MQ=="></div>
+  </div>
+  
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc" data-target="post-toc-wrap">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#需求详情"><span class="nav-number">1.</span> <span class="nav-text">需求详情</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#统一登陆注册模块–手机登陆注册"><span class="nav-number">1.1.</span> <span class="nav-text">统一登陆注册模块–手机登陆注册</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#统一登陆注册模块–邮箱登陆注册"><span class="nav-number">1.2.</span> <span class="nav-text">统一登陆注册模块–邮箱登陆注册</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置安全密码模块"><span class="nav-number">1.3.</span> <span class="nav-text">设置安全密码模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安全密码验证模块"><span class="nav-number">1.4.</span> <span class="nav-text">安全密码验证模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#登出"><span class="nav-number">1.5.</span> <span class="nav-text">登出</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分析与设计"><span class="nav-number">2.</span> <span class="nav-text">分析与设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#关键点"><span class="nav-number">2.1.</span> <span class="nav-text">关键点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方案选型"><span class="nav-number">2.2.</span> <span class="nav-text">方案选型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#方案一"><span class="nav-number">2.2.1.</span> <span class="nav-text">方案一</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#方案二"><span class="nav-number">2.2.2.</span> <span class="nav-text">方案二</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#分析"><span class="nav-number">2.2.3.</span> <span class="nav-text">分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#结论"><span class="nav-number">2.2.4.</span> <span class="nav-text">结论</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实现拆解"><span class="nav-number">2.2.5.</span> <span class="nav-text">实现拆解</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#技术选型"><span class="nav-number">3.</span> <span class="nav-text">技术选型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引入的组件与服务"><span class="nav-number">4.</span> <span class="nav-text">引入的组件与服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#接口"><span class="nav-number">5.</span> <span class="nav-text">接口</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#bff-层"><span class="nav-number">5.1.</span> <span class="nav-text">bff 层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#国际化文案平台服务"><span class="nav-number">5.2.</span> <span class="nav-text">国际化文案平台服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注册服务"><span class="nav-number">5.3.</span> <span class="nav-text">注册服务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关键逻辑流程"><span class="nav-number">6.</span> <span class="nav-text">关键逻辑流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#登陆注册页整体逻辑"><span class="nav-number">6.1.</span> <span class="nav-text">登陆注册页整体逻辑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#登陆注册行为时序图"><span class="nav-number">6.2.</span> <span class="nav-text">登陆注册行为时序图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安全密码设置页展示逻辑"><span class="nav-number">6.3.</span> <span class="nav-text">安全密码设置页展示逻辑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安全密码设置时序图"><span class="nav-number">6.4.</span> <span class="nav-text">安全密码设置时序图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安全密码验证页展示逻辑"><span class="nav-number">6.5.</span> <span class="nav-text">安全密码验证页展示逻辑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安全密码验证时序图"><span class="nav-number">6.6.</span> <span class="nav-text">安全密码验证时序图</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#打包方案"><span class="nav-number">7.</span> <span class="nav-text">打包方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#资源缓存处理方案"><span class="nav-number">8.</span> <span class="nav-text">资源缓存处理方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安全"><span class="nav-number">9.</span> <span class="nav-text">安全</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#XSS"><span class="nav-number">9.1.</span> <span class="nav-text">XSS</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#国际化文案获取"><span class="nav-number">9.1.1.</span> <span class="nav-text">国际化文案获取</span></a></li></ol></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/avatar.jpg"
+      alt="evanhongyousan">
+  <p class="site-author-name" itemprop="name">evanhongyousan</p>
+  <div class="site-description" itemprop="description">With some fe dev skills blog writed by Evan</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">53</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">77</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/EvanHongYousan" title="GitHub &rarr; https://github.com/EvanHongYousan" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:1370204201@qq.com" title="E-Mail &rarr; mailto:1370204201@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://www.douban.com/people/185733944/" title="豆瓣 &rarr; https://www.douban.com/people/185733944/" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>豆瓣</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://steamcommunity.com/profiles/76561198254399899/" title="Steam &rarr; https://steamcommunity.com/profiles/76561198254399899/" rel="noopener" target="_blank"><i class="fa fa-fw fa-steam"></i>Steam</a>
+      </span>
+    
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2025</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">evanhongyousan</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">139k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:52</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+    <span class="post-meta-divider">|</span>
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+    
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='132' src="//cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-nest@1/canvas-nest.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.ui.min.js"></script>
+  <style>
+    .darkmode-toggle {
+      z-index: 9999;
+    }
+    img, .darkmode-ignore {
+      isolation: isolate;
+      display: block;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.3.4/lib/darkmode-js.min.js"></script>
+  <script>
+  var options = {
+    bottom: '64px', // default: '32px'
+    right: '32px', // default: '32px'
+    left: 'unset', // default: 'unset'
+    time: '0.3s', // default: '0.3s'
+    mixColor: '#fff', // default: '#fff'
+    backgroundColor: '#fff',  // default: '#fff'
+    buttonColorDark: '#100f2c',  // default: '#100f2c'
+    buttonColorLight: '#fff', // default: '#fff'
+    saveInCookies: true, // default: true,
+    label: '🌙', // default: ''🌓
+    autoMatchOsTheme: true // default: true
+  }
+  var darkmode = new Darkmode(options);
+  darkmode.showWidget();
+  </script><script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/utils.js?v=7.3.0"></script><script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/motion.js?v=7.3.0"></script>
+<script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/schemes/muse.js?v=7.3.0"></script>
+<script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/next-boot.js?v=7.3.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/local-search.js?v=7.3.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script>
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-WBPBHQ3');</script>
+  <!-- End Google Tag Manager -->
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+  <meta name="baidu-site-verification" content="Qf3lafOaKG">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/css/main.css?v=7.3.0">
+
+<link rel="stylesheet" href="//fonts.loli.net/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="//cdn.bootcdn.net/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-minimal.css">
+  <script src="//cdn.jsdelivr.net/npm/pace-js@1/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="虽然现在vue已经来到最新的vue3，但仍然有许多vue2项目在不断迭代维护中。因为时代背景的原因（其实也就几年前），当时起这些vue2项目时，单元测试并不被重视。随着业务压力的增大，对版本质量的要求变高，单元测试终于被提上日程，且单元测试开始成为普遍共识。 这次就给一个已经运行几年的vue2项目加上单元测试。当中遇到了一些问题，但其实也是写单元测试会遇到的常见问题，在此做个实践记录">
+<meta name="keywords" content="jest,unit test,vue,vue test utils">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vue2项目单元测试对接实践记录">
+<meta property="og:url" content="https://evanhongyousan.github.io/2021/05/30/a-practice-of-vue-unit-test/index.html">
+<meta property="og:site_name" content="Evan&#39;s Blog | An FE developer&#39;s Blog">
+<meta property="og:description" content="虽然现在vue已经来到最新的vue3，但仍然有许多vue2项目在不断迭代维护中。因为时代背景的原因（其实也就几年前），当时起这些vue2项目时，单元测试并不被重视。随着业务压力的增大，对版本质量的要求变高，单元测试终于被提上日程，且单元测试开始成为普遍共识。 这次就给一个已经运行几年的vue2项目加上单元测试。当中遇到了一些问题，但其实也是写单元测试会遇到的常见问题，在此做个实践记录">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://evanhongyousan.github.io/2021/05/30/a-practice-of-vue-unit-test/maxresdefault.jpeg">
+<meta property="og:image" content="https://evanhongyousan.github.io/2021/05/30/a-practice-of-vue-unit-test/npxJestSilent.gif">
+<meta property="og:image" content="https://evanhongyousan.github.io/2021/05/30/a-practice-of-vue-unit-test/npxJestSilentCoverage.gif">
+<meta property="og:image" content="https://evanhongyousan.github.io/2021/05/30/a-practice-of-vue-unit-test/coverageOfHtml.gif">
+<meta property="og:updated_time" content="2025-01-03T07:09:25.245Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="vue2项目单元测试对接实践记录">
+<meta name="twitter:description" content="虽然现在vue已经来到最新的vue3，但仍然有许多vue2项目在不断迭代维护中。因为时代背景的原因（其实也就几年前），当时起这些vue2项目时，单元测试并不被重视。随着业务压力的增大，对版本质量的要求变高，单元测试终于被提上日程，且单元测试开始成为普遍共识。 这次就给一个已经运行几年的vue2项目加上单元测试。当中遇到了一些问题，但其实也是写单元测试会遇到的常见问题，在此做个实践记录">
+<meta name="twitter:image" content="https://evanhongyousan.github.io/2021/05/30/a-practice-of-vue-unit-test/maxresdefault.jpeg">
+  <link rel="alternate" href="/atom.xml" title="Evan's Blog | An FE developer's Blog" type="application/atom+xml">
+  <link rel="canonical" href="https://evanhongyousan.github.io/2021/05/30/a-practice-of-vue-unit-test/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>vue2项目单元测试对接实践记录 | Evan's Blog | An FE developer's Blog</title>
+  <meta name="generator" content="Hexo 3.9.0">
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WBPBHQ3"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Evan's Blog | An FE developer's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档<span class="badge">53</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类<span class="badge">1</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签<span class="badge">77</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-books">
+      
+    
+      
+    
+
+    <a href="/books/" rel="section"><i class="menu-item-icon fa fa-fw fa-book"></i> <br>阅读</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-movies">
+      
+    
+      
+    
+
+    <a href="/movies/" rel="section"><i class="menu-item-icon fa fa-fw fa-film"></i> <br>电影</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-games">
+      
+    
+      
+    
+
+    <a href="/games/" rel="section"><i class="menu-item-icon fa fa-fw fa-gamepad"></i> <br>游戏</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-steam">
+      
+    
+      
+    
+
+    <a href="/steamgames/" rel="section"><i class="menu-item-icon fa fa-fw fa-brands fa-steam"></i> <br>steam</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-bangumis">
+      
+    
+      
+    
+
+    <a href="/bangumis/" rel="section"><i class="menu-item-icon fa fa-fw fa-brands fa-bilibili"></i> <br>bangumis</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-cinemas">
+      
+    
+      
+    
+
+    <a href="/cinemas/" rel="section"><i class="menu-item-icon fa fa-fw fa-brands fa-youtube"></i> <br>cinemas</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+    
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="https://evanhongyousan.github.io/2021/05/30/a-practice-of-vue-unit-test/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="evanhongyousan">
+      <meta itemprop="description" content="With some fe dev skills blog writed by Evan">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Evan's Blog | An FE developer's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">vue2项目单元测试对接实践记录
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2021-05-30 16:25:35" itemprop="dateCreated datePublished" datetime="2021-05-30T16:25:35+08:00">2021-05-30</time>
+            </span>
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/tech/" itemprop="url" rel="index"><span itemprop="name">tech</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            <span class="post-meta-item" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">本文字数：</span>
+              
+              <span>8k</span>
+            </span>
+          
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              
+              <span>13 分钟</span>
+            </span>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>虽然现在vue已经来到最新的vue3，但仍然有许多vue2项目在不断迭代维护中。因为时代背景的原因（其实也就几年前），当时起这些vue2项目时，单元测试并不被重视。随着业务压力的增大，对版本质量的要求变高，单元测试终于被提上日程，且单元测试开始成为普遍共识。</p>
+<p>这次就给一个已经运行几年的vue2项目加上单元测试。当中遇到了一些问题，但其实也是写单元测试会遇到的常见问题，在此做个实践记录</p>
+<img src="/2021/05/30/a-practice-of-vue-unit-test/maxresdefault.jpeg" alt="maxresdefault.jpeg" title>
+
+<a id="more"></a>
+
+<h2 id="阅读前提"><a href="#阅读前提" class="headerlink" title="阅读前提"></a>阅读前提</h2><ul>
+<li>熟悉 <a href="https://cn.vuejs.org/v2/guide/" target="_blank" rel="noopener">vue2</a></li>
+<li>熟悉 <a href="https://jestjs.io/" target="_blank" rel="noopener">jest</a></li>
+<li>熟悉 <a href="https://vue-test-utils.vuejs.org/zh/guides/" target="_blank" rel="noopener">Vue Test Utils</a></li>
+</ul>
+<h2 id="项目特点说明"><a href="#项目特点说明" class="headerlink" title="项目特点说明"></a>项目特点说明</h2><ul>
+<li>项目已经运行几年</li>
+<li>本次针对项目中前端部分的其中一个模块做单元测试接入，此模块为重要业务模块</li>
+<li>模块的主要技术栈为vue2，绝大部分代码基于vue2技术栈</li>
+<li>模块中夹杂了一些jquery代码，同时也有一些直接操作dom、bom的代码</li>
+</ul>
+<h2 id="分析与设计"><a href="#分析与设计" class="headerlink" title="分析与设计"></a>分析与设计</h2><ul>
+<li>对于测试框架，因为本人对jest更为熟悉的关系，本次直接使用jest进行单元测试框架接入</li>
+<li>对于vue2的单元测试工具库选择，其<a href="https://cn.vuejs.org/v2/cookbook/unit-testing-vue-components.html" target="_blank" rel="noopener">官方文档</a>中推荐的是 <a href="https://vue-test-utils.vuejs.org/zh/guides/" target="_blank" rel="noopener">Vue Test Utils</a>，则本次直接使用 Vue Test Utils</li>
+<li>项目中和业务逻辑相关的代码，都是vue2代码，单元测试主要对这部分逻辑进行测试覆盖</li>
+<li>项目中基于jquery的代码，主要和动画效果相关（重构方面的产出），这部分可不做测试覆盖</li>
+<li>代码也基于typescript，jest中要做相关转码配置</li>
+</ul>
+<h2 id="起步"><a href="#起步" class="headerlink" title="起步"></a>起步</h2><h3 id="依赖安装"><a href="#依赖安装" class="headerlink" title="依赖安装"></a>依赖安装</h3><p>首先，要先安装好本次接入单元测试的相关依赖</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># unit testing</span></span><br><span class="line">vue add @vue/unit-jest</span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装 Jest 和 Vue Test Utils</span></span><br><span class="line">npm install --save-dev jest @vue/<span class="built_in">test</span>-utils</span><br><span class="line"><span class="comment"># 安装 babel-jest 、 vue-jest 和 7.0.0-bridge.0 版本的 babel-core</span></span><br><span class="line">npm install --save-dev babel-jest vue-jest babel-core@7.0.0-bridge.0</span><br><span class="line"><span class="comment"># 安装 jest-serializer-vue</span></span><br><span class="line">npm install --save-dev jest-serializer-vue</span><br></pre></td></tr></table></figure>
+
+<p>另外，项目为typescript项目，还需要安装typescript转码依赖</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev jest-preset-typescript ts-jest @vue/cli-plugin-unit-jest @babel/preset-typescript</span><br></pre></td></tr></table></figure>
+
+<p>至此，依赖安装完成</p>
+<blockquote>
+<p>如果需要快速体验的话，也可以直接使用官方文档里的脚手架<br>  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/vuejs/vue-test-utils-getting-started</span><br><span class="line"><span class="built_in">cd</span> vue-test-utils-getting-started</span><br><span class="line">npm install</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>jest的配置可以直接在package.json中写，或者新建文件 <code>jest.config.js</code></p>
+<ul>
+<li>jest.config.js:</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  preset: <span class="string">'@vue/cli-plugin-unit-jest/presets/no-babel'</span>,</span><br><span class="line">  globals: &#123;</span><br><span class="line">    <span class="string">'ts-jest'</span>: &#123;</span><br><span class="line">      babelConfig: <span class="literal">true</span>,</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">// 测试覆盖配置</span></span><br><span class="line">  <span class="string">"coverageThreshold"</span>: &#123;</span><br><span class="line">    <span class="string">"global"</span>: &#123;</span><br><span class="line">      <span class="string">"branches"</span>: <span class="number">10</span>, <span class="comment">// 逻辑分支（if else之类）覆盖不可低于10%，否则抛出错误</span></span><br><span class="line">      <span class="string">"functions"</span>: <span class="number">10</span>, <span class="comment">// 函数覆盖不可低于10%，否则抛出错误</span></span><br><span class="line">      <span class="string">"lines"</span>: <span class="number">10</span>,  <span class="comment">// 代码行数覆盖不可低于10%，否则抛出错误</span></span><br><span class="line">      <span class="string">"statements"</span>: <span class="number">10</span>  <span class="comment">// 代码块行数覆盖不可低于10%，否则抛出错误</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  moduleFileExtensions: [</span><br><span class="line">    <span class="string">'ts'</span>,</span><br><span class="line">    <span class="string">'js'</span>,</span><br><span class="line">    <span class="string">'json'</span>,</span><br><span class="line">    <span class="string">'vue'</span>,</span><br><span class="line">  ],</span><br><span class="line">  <span class="comment">// 转码配置</span></span><br><span class="line">  transform: &#123;</span><br><span class="line">    <span class="comment">// process TypeScript files</span></span><br><span class="line">    <span class="string">"^.+\\.ts$"</span>: <span class="string">"ts-jest"</span>,</span><br><span class="line">    <span class="comment">// process *.vue files with vue-jest</span></span><br><span class="line">    <span class="string">".*\\.(vue)$"</span>: <span class="string">"vue-jest"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  testURL: <span class="string">'http://localhost/'</span>,</span><br><span class="line">  <span class="comment">// 测试代码文件匹配</span></span><br><span class="line">  testMatch: [<span class="string">'**/*.spec.[jt]s?(x)'</span>],</span><br><span class="line">  moduleDirectories: [</span><br><span class="line">    <span class="string">"node_modules"</span></span><br><span class="line">  ],</span><br><span class="line">  <span class="comment">// 初始化文件路径</span></span><br><span class="line">  setupFiles: [<span class="string">'./jest.setup.js'</span>],</span><br><span class="line">  <span class="comment">// 会被计算测试覆盖率的文件</span></span><br><span class="line">  collectCoverageFrom: [<span class="string">'static/js/app/creditcard/**'</span>, <span class="string">'!./**/*.snap'</span>],</span><br><span class="line">  <span class="comment">// 测试报告产出形式</span></span><br><span class="line">  coverageReporters: [<span class="string">"json"</span>, <span class="string">"lcov"</span>, <span class="string">"text"</span>, <span class="string">"clover"</span>, <span class="string">"text-summary"</span>],</span><br><span class="line">  <span class="comment">// 测试快照序列化工具库</span></span><br><span class="line">  snapshotSerializers: [<span class="string">"jest-serializer-vue"</span>]</span><br><span class="line">  <span class="comment">// testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$',</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="具体测试代码"><a href="#具体测试代码" class="headerlink" title="具体测试代码"></a>具体测试代码</h2><p>完成依赖安装和基本配置后，接下来就是具体单元测试代码的接入</p>
+<h3 id="纯函数测试"><a href="#纯函数测试" class="headerlink" title="纯函数测试"></a>纯函数测试</h3><ul>
+<li>对于纯函数，只需要关注输入与输出即可</li>
+<li>通常项目中 utils 文件夹中的都是纯函数</li>
+</ul>
+<h4 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h4><ul>
+<li>utils/index.tsx</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sum</span>(<span class="params">a: number, b: number</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> a + b;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> &#123; sum &#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>utils/index.test.tsx</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; sum &#125; <span class="keyword">from</span> <span class="string">"./index"</span>;</span><br><span class="line"></span><br><span class="line">it(<span class="string">"test sum"</span>, () =&gt; &#123;</span><br><span class="line">  expect(sum(<span class="number">1</span>, <span class="number">2</span>)).toEqual(<span class="number">3</span>);</span><br><span class="line">  expect(sum(<span class="number">2</span>, <span class="number">3</span>)).toEqual(<span class="number">5</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="页面展示内容测试"><a href="#页面展示内容测试" class="headerlink" title="页面展示内容测试"></a>页面展示内容测试</h3><ul>
+<li>在 vue2 语境下，页面使用组件进行内容展示</li>
+<li>则开发人员需要以组件为单位进行测试</li>
+</ul>
+<h4 id="实例-1"><a href="#实例-1" class="headerlink" title="实例"></a>实例</h4><ul>
+<li>src/components/info.vue</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">        info</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">export default &#123;</span><br><span class="line">    props: [],</span><br><span class="line">    components: &#123;</span><br><span class="line">    &#125;,</span><br><span class="line">    data() &#123;</span><br><span class="line">        return &#123;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    methods: &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>src/components/info.spec.tsx</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; shallowMount &#125; <span class="keyword">from</span> <span class="string">'@vue/test-utils'</span></span><br><span class="line"><span class="keyword">import</span> info <span class="keyword">from</span> <span class="string">'./info.vue'</span></span><br><span class="line"></span><br><span class="line">describe(<span class="string">'info.vue'</span>, () =&gt; &#123;</span><br><span class="line">    it(<span class="string">'renders 1'</span>, () =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> wrapper = shallowMount(info, &#123;</span><br><span class="line">      propsData: &#123;&#125;</span><br><span class="line">    &#125;)</span><br><span class="line">    expect(wrapper.text()).toMatch(<span class="string">'info'</span>)</span><br><span class="line">    expect(wrapper).toMatchSnapshot()</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="组件方法测试"><a href="#组件方法测试" class="headerlink" title="组件方法测试"></a>组件方法测试</h3><h4 id="实例-2"><a href="#实例-2" class="headerlink" title="实例"></a>实例</h4><ul>
+<li>src/components/info.vue</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">        info</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">export default &#123;</span><br><span class="line">    props: [],</span><br><span class="line">    components: &#123;</span><br><span class="line">    &#125;,</span><br><span class="line">    data() &#123;</span><br><span class="line">        return &#123;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    methods: &#123;</span><br><span class="line">        sum(num1, num2) &#123;</span><br><span class="line">            return num1 + num2</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>src/components/info.spec.tsx</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; shallowMount &#125; <span class="keyword">from</span> <span class="string">'@vue/test-utils'</span></span><br><span class="line"><span class="keyword">import</span> info <span class="keyword">from</span> <span class="string">'./info.vue'</span></span><br><span class="line"></span><br><span class="line">describe(<span class="string">'info.vue'</span>, () =&gt; &#123;</span><br><span class="line">    it(<span class="string">'methods -- sum'</span>, () =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> wrapper = shallowMount(info, &#123;</span><br><span class="line">      propsData: &#123;&#125;</span><br><span class="line">    &#125;)</span><br><span class="line">    expect((wrapper.vm <span class="keyword">as</span> any).sum(<span class="number">1</span>, <span class="number">2</span>)).toBe(<span class="number">3</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="组件状态测试"><a href="#组件状态测试" class="headerlink" title="组件状态测试"></a>组件状态测试</h3><h4 id="实例-3"><a href="#实例-3" class="headerlink" title="实例"></a>实例</h4><ul>
+<li>src/components/info.vue</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">        info</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">export default &#123;</span><br><span class="line">    props: [],</span><br><span class="line">    components: &#123;</span><br><span class="line">    &#125;,</span><br><span class="line">    data() &#123;</span><br><span class="line">        return &#123;</span><br><span class="line">            ttt: 1</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    methods: &#123;</span><br><span class="line">        sum(num1, num2) &#123;</span><br><span class="line">            return num1 + num2</span><br><span class="line">        &#125;,</span><br><span class="line">        setTTT(num) &#123;</span><br><span class="line">            this.ttt = num</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>src/components/info.spec.tsx</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; shallowMount &#125; <span class="keyword">from</span> <span class="string">'@vue/test-utils'</span></span><br><span class="line"><span class="keyword">import</span> info <span class="keyword">from</span> <span class="string">'./info.vue'</span></span><br><span class="line"></span><br><span class="line">describe(<span class="string">'info.vue'</span>, () =&gt; &#123;</span><br><span class="line">    it(<span class="string">'methods -- sum'</span>, () =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> wrapper = shallowMount(info, &#123;</span><br><span class="line">      propsData: &#123;&#125;</span><br><span class="line">    &#125;)</span><br><span class="line">    expect((wrapper.vm <span class="keyword">as</span> any).ttt).toBe(<span class="number">1</span>)</span><br><span class="line">    expect((wrapper.vm <span class="keyword">as</span> any).setTTT(<span class="number">555</span>)).toBeUndefined()</span><br><span class="line">    expect((wrapper.vm <span class="keyword">as</span> any).ttt).toBe(<span class="number">555</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="组件属性测试"><a href="#组件属性测试" class="headerlink" title="组件属性测试"></a>组件属性测试</h3><p>从这里开始引入mock的概念</p>
+<h4 id="实例-4"><a href="#实例-4" class="headerlink" title="实例"></a>实例</h4><ul>
+<li>src/components/info.vue</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">        info</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">export default &#123;</span><br><span class="line">    props: [&apos;callBack&apos;],</span><br><span class="line">    components: &#123;</span><br><span class="line">    &#125;,</span><br><span class="line">    data() &#123;</span><br><span class="line">        return &#123;</span><br><span class="line">            ttt: 1</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    methods: &#123;</span><br><span class="line">        sum(num1, num2) &#123;</span><br><span class="line">            return num1 + num2</span><br><span class="line">        &#125;,</span><br><span class="line">        setTTT(num) &#123;</span><br><span class="line">            this.ttt = num</span><br><span class="line">        &#125;,</span><br><span class="line">        callCB(event) &#123;</span><br><span class="line">            this.callBack(event)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>src/components/info.spec.tsx</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; shallowMount &#125; <span class="keyword">from</span> <span class="string">'@vue/test-utils'</span></span><br><span class="line"><span class="keyword">import</span> info <span class="keyword">from</span> <span class="string">'./info.vue'</span></span><br><span class="line"></span><br><span class="line">describe(<span class="string">'info.vue'</span>, () =&gt; &#123;</span><br><span class="line">    it(<span class="string">'methods -- callCB'</span>, () =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> mockCB = jest.fn()</span><br><span class="line">    <span class="keyword">const</span> wrapper = shallowMount(info, &#123;</span><br><span class="line">      propsData: &#123;</span><br><span class="line">          callBack: mockCB</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">    expect((wrapper.vm <span class="keyword">as</span> any).callCB(<span class="number">111</span>)).toBeUndefined()</span><br><span class="line">    expect(mockCB).toBeCalled()</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="涉及dom属性或bom属性的测试"><a href="#涉及dom属性或bom属性的测试" class="headerlink" title="涉及dom属性或bom属性的测试"></a>涉及dom属性或bom属性的测试</h3><p>运行测试时，组件运行在jest-dom环境中（或开发人员配置的其它dom环境甚至node环境），而实际的业务代码有可能会在全局作用域或上层作用域中挂载一些属性在dom节点/window节点下，则组件中可以直接运行 <code>window.xxx.xxx</code> 这样的代码</p>
+<p>但这样的代码，在进行测试时，会报错 <code>xxx is not defined</code></p>
+<p>此时，就要对组件中依赖到的对象进行mock</p>
+<h4 id="实例-5"><a href="#实例-5" class="headerlink" title="实例"></a>实例</h4><ul>
+<li>src/components/info.vue</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">        info</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">export default &#123;</span><br><span class="line">    props: [&apos;callBack&apos;],</span><br><span class="line">    components: &#123;</span><br><span class="line">    &#125;,</span><br><span class="line">    data() &#123;</span><br><span class="line">        return &#123;&#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    methods: &#123;</span><br><span class="line">        getTheXXX() &#123;</span><br><span class="line">            return window.abc.xxx</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>src/components/info.spec.tsx</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; shallowMount &#125; <span class="keyword">from</span> <span class="string">'@vue/test-utils'</span></span><br><span class="line"><span class="keyword">import</span> info <span class="keyword">from</span> <span class="string">'./info.vue'</span></span><br><span class="line"></span><br><span class="line">beforeAll(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">Object</span>.defineProperty(<span class="built_in">window</span>, <span class="string">"abc"</span>, &#123;</span><br><span class="line">    writable: <span class="literal">true</span>,</span><br><span class="line">    value: &#123;</span><br><span class="line">      xxx: <span class="string">'xxx'</span></span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">describe(<span class="string">'info.vue'</span>, () =&gt; &#123;</span><br><span class="line">    it(<span class="string">'methods -- getTheXXX'</span>, () =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> wrapper = shallowMount(info, &#123;</span><br><span class="line">      propsData: &#123;&#125;</span><br><span class="line">    &#125;)</span><br><span class="line">    expect((wrapper.vm <span class="keyword">as</span> any).getTheXXX()).toBe(<span class="string">'xxx'</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="涉及-service-api-的测试"><a href="#涉及-service-api-的测试" class="headerlink" title="涉及 service api 的测试"></a>涉及 service api 的测试</h3><p>页面交互经常会涉及service api调用。有部分业界人士会直接启动一个mock server，测试时组件就直接向mock server请求数据，然后验证组件的状态变化是否符合期待</p>
+<p>但也有部分业界人士比较习惯直接对http client进行mock。jest在这方面也提供了特性</p>
+<h4 id="实例-6"><a href="#实例-6" class="headerlink" title="实例"></a>实例</h4><ul>
+<li>src/components/info.vue</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">        info</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">import api from &apos;./api.ts&apos;</span><br><span class="line">export default &#123;</span><br><span class="line">    props: [],</span><br><span class="line">    components: &#123;</span><br><span class="line">    &#125;,</span><br><span class="line">    data() &#123;</span><br><span class="line">        return &#123;&#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    methods: &#123;</span><br><span class="line">        async getUserInfo() &#123;</span><br><span class="line">            return await api.getUserInfo()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>src/components/info.spec.tsx</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; shallowMount &#125; <span class="keyword">from</span> <span class="string">'@vue/test-utils'</span></span><br><span class="line"><span class="keyword">import</span> info <span class="keyword">from</span> <span class="string">'./info.vue'</span></span><br><span class="line"></span><br><span class="line">jest.mock(<span class="string">'./api.ts'</span>, () =&gt; (&#123;</span><br><span class="line">  getUserInfo: jest.fn().mockImplementation(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">Promise</span>.resolve(<span class="string">'userInfo)),</span></span><br><span class="line"><span class="string">&#125;))</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">describe('</span>info.vue<span class="string">', () =&gt; &#123;</span></span><br><span class="line"><span class="string">    it('</span>methods -- getUserInfo<span class="string">', () =&gt; &#123;</span></span><br><span class="line"><span class="string">    const wrapper = shallowMount(info, &#123;</span></span><br><span class="line"><span class="string">      propsData: &#123;&#125;</span></span><br><span class="line"><span class="string">    &#125;)</span></span><br><span class="line"><span class="string">    expect((wrapper.vm as any).getUserInfo()).toBe('</span>userInfo<span class="string">')</span></span><br><span class="line"><span class="string">  &#125;)</span></span><br><span class="line"><span class="string">&#125;)</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="运行测试"><a href="#运行测试" class="headerlink" title="运行测试"></a>运行测试</h2><h3 id="全量测试"><a href="#全量测试" class="headerlink" title="全量测试"></a>全量测试</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx jest</span><br></pre></td></tr></table></figure>
+
+<p>可以看到全量测试运行结果</p>
+<img src="/2021/05/30/a-practice-of-vue-unit-test/npxJestSilent.gif" alt="npxJestSilent.gif" title>
+
+<h3 id="全量测试并输出测试覆盖报告"><a href="#全量测试并输出测试覆盖报告" class="headerlink" title="全量测试并输出测试覆盖报告"></a>全量测试并输出测试覆盖报告</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx jest --coverage</span><br></pre></td></tr></table></figure>
+
+<img src="/2021/05/30/a-practice-of-vue-unit-test/npxJestSilentCoverage.gif" alt="npxJestSilentCoverage.gif" title>
+
+<p>指令跑完后，在项目根目录下会生成 <code>coverage</code> 文件夹，里面的 <code>lcov-report</code> 文件夹包含html、js、css文件，可构建成一个静态站点，看到被测试代码的详细覆盖情况</p>
+<img src="/2021/05/30/a-practice-of-vue-unit-test/coverageOfHtml.gif" alt="coverageOfHtml.gif" title>
+
+<h3 id="watch模式下运行测试"><a href="#watch模式下运行测试" class="headerlink" title="watch模式下运行测试"></a>watch模式下运行测试</h3><p>针对变更文件进行测试，且每次文件变更并保存后触发测试</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx jest --watch</span><br></pre></td></tr></table></figure>
+
+<h2 id="成本说明"><a href="#成本说明" class="headerlink" title="成本说明"></a>成本说明</h2><p>当前信用卡业务前端部分被统计的代码行数为2771行，单元测试覆盖行数为1259行，单元测试行覆盖率为45.43%<br>以下是详细的测试覆盖推进细节：</p>
+<ul>
+<li>行覆盖率 0% → 37%，时间为 2021.05.06 ~ 2021.05.14，除去其他工作占用时间，投入至单元测试的大概是5个工作日。<ul>
+<li>其中两个工作日为单元测试框架对接和组件最简单的测试对接，完成后单元测试覆盖大概有20%。20% ~ 37%的覆盖则是代码中的逻辑覆盖，耗时3个工作日</li>
+</ul>
+</li>
+<li>行覆盖率 37% → 45%，时间为 2021.05.17 ~ 2021.05.21，除去其他工作占用时间，投入至单元测试的大概是1.5个工作日</li>
+</ul>
+<p>综上:</p>
+<ul>
+<li>0 ~ 20%时，效率为 10%（277.1行）/工作日</li>
+<li>20% ~ 37% 时，效率为 5.6%（155.2行）/工作日</li>
+<li>37% ~ 45% 时，效率为5.3%（146.9行）/工作日</li>
+</ul>
+<blockquote>
+<p>以上特指项目中的js、ts源码，不包含css、html等其他代码<br>jest中的Istanbul进行代码行数统计时，使用一套内部规则进行计算，并不受源码的回车换行符影响。故编辑器中显示代码文件的行数，和jest产出的测试覆盖报告的的代码行数并不是一个概念</p>
+</blockquote>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://cn.vuejs.org/v2/guide/" target="_blank" rel="noopener">vue2</a></li>
+<li><a href="https://jestjs.io/" target="_blank" rel="noopener">jest</a></li>
+<li><a href="https://vue-test-utils.vuejs.org/zh/guides/" target="_blank" rel="noopener">Vue Test Utils</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+      
+        <div id="reward-container">
+  <div>众筹开高达</div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/wechatpay.jpg" alt="evanhongyousan 微信支付">
+        <p>微信支付</p>
+      </div>
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/alipay.jpg" alt="evanhongyousan 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/jest/" rel="tag"><i class="fa fa-tag"></i> jest</a>
+            
+              <a href="/tags/unit-test/" rel="tag"><i class="fa fa-tag"></i> unit test</a>
+            
+              <a href="/tags/vue/" rel="tag"><i class="fa fa-tag"></i> vue</a>
+            
+              <a href="/tags/vue-test-utils/" rel="tag"><i class="fa fa-tag"></i> vue test utils</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2021/04/04/nestjs-start-doc/" rel="next" title="Nest 官方文档要点">
+                  <i class="fa fa-chevron-left"></i> Nest 官方文档要点
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2021/09/24/earth-rotation-animation-research/" rel="prev" title="地球转动动画效果预研">
+                  地球转动动画效果预研 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    
+  <div class="comments" id="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80NjM2MC8yMjg3MQ=="></div>
+  </div>
+  
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc" data-target="post-toc-wrap">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#阅读前提"><span class="nav-number">1.</span> <span class="nav-text">阅读前提</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#项目特点说明"><span class="nav-number">2.</span> <span class="nav-text">项目特点说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分析与设计"><span class="nav-number">3.</span> <span class="nav-text">分析与设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#起步"><span class="nav-number">4.</span> <span class="nav-text">起步</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#依赖安装"><span class="nav-number">4.1.</span> <span class="nav-text">依赖安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置"><span class="nav-number">4.2.</span> <span class="nav-text">配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#具体测试代码"><span class="nav-number">5.</span> <span class="nav-text">具体测试代码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#纯函数测试"><span class="nav-number">5.1.</span> <span class="nav-text">纯函数测试</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#实例"><span class="nav-number">5.1.1.</span> <span class="nav-text">实例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#页面展示内容测试"><span class="nav-number">5.2.</span> <span class="nav-text">页面展示内容测试</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#实例-1"><span class="nav-number">5.2.1.</span> <span class="nav-text">实例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#组件方法测试"><span class="nav-number">5.3.</span> <span class="nav-text">组件方法测试</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#实例-2"><span class="nav-number">5.3.1.</span> <span class="nav-text">实例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#组件状态测试"><span class="nav-number">5.4.</span> <span class="nav-text">组件状态测试</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#实例-3"><span class="nav-number">5.4.1.</span> <span class="nav-text">实例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#组件属性测试"><span class="nav-number">5.5.</span> <span class="nav-text">组件属性测试</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#实例-4"><span class="nav-number">5.5.1.</span> <span class="nav-text">实例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#涉及dom属性或bom属性的测试"><span class="nav-number">5.6.</span> <span class="nav-text">涉及dom属性或bom属性的测试</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#实例-5"><span class="nav-number">5.6.1.</span> <span class="nav-text">实例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#涉及-service-api-的测试"><span class="nav-number">5.7.</span> <span class="nav-text">涉及 service api 的测试</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#实例-6"><span class="nav-number">5.7.1.</span> <span class="nav-text">实例</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行测试"><span class="nav-number">6.</span> <span class="nav-text">运行测试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#全量测试"><span class="nav-number">6.1.</span> <span class="nav-text">全量测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#全量测试并输出测试覆盖报告"><span class="nav-number">6.2.</span> <span class="nav-text">全量测试并输出测试覆盖报告</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#watch模式下运行测试"><span class="nav-number">6.3.</span> <span class="nav-text">watch模式下运行测试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#成本说明"><span class="nav-number">7.</span> <span class="nav-text">成本说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">8.</span> <span class="nav-text">参考</span></a></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/avatar.jpg"
+      alt="evanhongyousan">
+  <p class="site-author-name" itemprop="name">evanhongyousan</p>
+  <div class="site-description" itemprop="description">With some fe dev skills blog writed by Evan</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">53</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">77</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/EvanHongYousan" title="GitHub &rarr; https://github.com/EvanHongYousan" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:1370204201@qq.com" title="E-Mail &rarr; mailto:1370204201@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://www.douban.com/people/185733944/" title="豆瓣 &rarr; https://www.douban.com/people/185733944/" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>豆瓣</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://steamcommunity.com/profiles/76561198254399899/" title="Steam &rarr; https://steamcommunity.com/profiles/76561198254399899/" rel="noopener" target="_blank"><i class="fa fa-fw fa-steam"></i>Steam</a>
+      </span>
+    
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2025</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">evanhongyousan</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">139k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:52</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+    <span class="post-meta-divider">|</span>
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+    
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='132' src="//cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-nest@1/canvas-nest.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.ui.min.js"></script>
+  <style>
+    .darkmode-toggle {
+      z-index: 9999;
+    }
+    img, .darkmode-ignore {
+      isolation: isolate;
+      display: block;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.3.4/lib/darkmode-js.min.js"></script>
+  <script>
+  var options = {
+    bottom: '64px', // default: '32px'
+    right: '32px', // default: '32px'
+    left: 'unset', // default: 'unset'
+    time: '0.3s', // default: '0.3s'
+    mixColor: '#fff', // default: '#fff'
+    backgroundColor: '#fff',  // default: '#fff'
+    buttonColorDark: '#100f2c',  // default: '#100f2c'
+    buttonColorLight: '#fff', // default: '#fff'
+    saveInCookies: true, // default: true,
+    label: '🌙', // default: ''🌓
+    autoMatchOsTheme: true // default: true
+  }
+  var darkmode = new Darkmode(options);
+  darkmode.showWidget();
+  </script><script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/utils.js?v=7.3.0"></script><script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/motion.js?v=7.3.0"></script>
+<script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/schemes/muse.js?v=7.3.0"></script>
+<script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/next-boot.js?v=7.3.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/local-search.js?v=7.3.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script>
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script>
+
+</body>
+</html>

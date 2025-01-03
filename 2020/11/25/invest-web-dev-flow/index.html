@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-WBPBHQ3');</script>
+  <!-- End Google Tag Manager -->
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+  <meta name="baidu-site-verification" content="Qf3lafOaKG">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/css/main.css?v=7.3.0">
+
+<link rel="stylesheet" href="//fonts.loli.net/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="//cdn.bootcdn.net/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-minimal.css">
+  <script src="//cdn.jsdelivr.net/npm/pace-js@1/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="keywords" content="gitlab CI,unit test,CI,git flow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="invest web团队工作流 -- 关于 git flow、代码校验、单元测试、持续集成的结合">
+<meta property="og:url" content="https://evanhongyousan.github.io/2020/11/25/invest-web-dev-flow/index.html">
+<meta property="og:site_name" content="Evan&#39;s Blog | An FE developer&#39;s Blog">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://evanhongyousan.github.io/2020/11/25/invest-web-dev-flow/invest_git_flow.png">
+<meta property="og:image" content="https://evanhongyousan.github.io/2020/11/25/invest-web-dev-flow/invest_git_flow.png">
+<meta property="og:image" content="https://evanhongyousan.github.io/2020/11/25/invest-web-dev-flow/unit-test-cost.jpg">
+<meta property="og:image" content="https://evanhongyousan.github.io/2020/11/25/invest-web-dev-flow/unit-test-running.gif">
+<meta property="og:image" content="https://evanhongyousan.github.io/2020/11/25/invest-web-dev-flow/test_coverage.gif">
+<meta property="og:image" content="https://evanhongyousan.github.io/2020/11/25/invest-web-dev-flow/pipeline-email.png">
+<meta property="og:image" content="https://evanhongyousan.github.io/2020/11/25/invest-web-dev-flow/ivnest_web_work_flow.png">
+<meta property="og:updated_time" content="2025-01-03T07:09:25.105Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="invest web团队工作流 -- 关于 git flow、代码校验、单元测试、持续集成的结合">
+<meta name="twitter:image" content="https://evanhongyousan.github.io/2020/11/25/invest-web-dev-flow/invest_git_flow.png">
+  <link rel="alternate" href="/atom.xml" title="Evan's Blog | An FE developer's Blog" type="application/atom+xml">
+  <link rel="canonical" href="https://evanhongyousan.github.io/2020/11/25/invest-web-dev-flow/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>invest web团队工作流 -- 关于 git flow、代码校验、单元测试、持续集成的结合 | Evan's Blog | An FE developer's Blog</title>
+  <meta name="generator" content="Hexo 3.9.0">
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WBPBHQ3"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Evan's Blog | An FE developer's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档<span class="badge">53</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类<span class="badge">1</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签<span class="badge">77</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-books">
+      
+    
+      
+    
+
+    <a href="/books/" rel="section"><i class="menu-item-icon fa fa-fw fa-book"></i> <br>阅读</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-movies">
+      
+    
+      
+    
+
+    <a href="/movies/" rel="section"><i class="menu-item-icon fa fa-fw fa-film"></i> <br>电影</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-games">
+      
+    
+      
+    
+
+    <a href="/games/" rel="section"><i class="menu-item-icon fa fa-fw fa-gamepad"></i> <br>游戏</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-steam">
+      
+    
+      
+    
+
+    <a href="/steamgames/" rel="section"><i class="menu-item-icon fa fa-fw fa-brands fa-steam"></i> <br>steam</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-bangumis">
+      
+    
+      
+    
+
+    <a href="/bangumis/" rel="section"><i class="menu-item-icon fa fa-fw fa-brands fa-bilibili"></i> <br>bangumis</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-cinemas">
+      
+    
+      
+    
+
+    <a href="/cinemas/" rel="section"><i class="menu-item-icon fa fa-fw fa-brands fa-youtube"></i> <br>cinemas</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+    
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="https://evanhongyousan.github.io/2020/11/25/invest-web-dev-flow/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="evanhongyousan">
+      <meta itemprop="description" content="With some fe dev skills blog writed by Evan">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Evan's Blog | An FE developer's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">invest web团队工作流 -- 关于 git flow、代码校验、单元测试、持续集成的结合
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2020-11-25 15:42:06" itemprop="dateCreated datePublished" datetime="2020-11-25T15:42:06+08:00">2020-11-25</time>
+            </span>
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/tech/" itemprop="url" rel="index"><span itemprop="name">tech</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            <span class="post-meta-item" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">本文字数：</span>
+              
+              <span>4.3k</span>
+            </span>
+          
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              
+              <span>7 分钟</span>
+            </span>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <!-- <img src="/2020/11/25/invest-web-dev-flow/unit-test-running.gif" alt="unit-test-running.gif" title=""> -->
+
+<img src="/2020/11/25/invest-web-dev-flow/invest_git_flow.png" alt="invest_git_flow.png" title>
+
+<a id="more"></a>
+
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><ul>
+<li>原 git 开发模式的问题<ul>
+<li>关键分支未收到严格保护，代码 review 未收到严格约束</li>
+<li>sit、uat、master 分支管理模式，会导致代码合并风险加大，测试版本和发布版本差异过大</li>
+</ul>
+</li>
+<li>各个项目代码风格不统一</li>
+<li>特性验证的问题<ul>
+<li>开发人员的开发、上线过程，可以概括为 coding-&gt;testing-&gt;coding-&gt;testing 循环；随着项目复杂度越来越高，testing 的成本越来越大</li>
+<li>复杂度到达一定程度后，testing 成本会大到影响正常迭代</li>
+<li>代码 review 与 merge 操作，会对开发人员带来越来越大的心智负担</li>
+<li>项目特性越来越多，越来越无法重构</li>
+</ul>
+</li>
+<li>开发约束问题<ul>
+<li>本地开发可以绕过约束</li>
+</ul>
+</li>
+<li>因为上述问题，进而进行了 git 开发模式的调整，代码校验与单元测试的添加，持续集成的推进</li>
+</ul>
+<h2 id="git-开发模式"><a href="#git-开发模式" class="headerlink" title="git 开发模式"></a>git 开发模式</h2><ul>
+<li>当前 git 分支流推进是这个模式</li>
+</ul>
+<img src="/2020/11/25/invest-web-dev-flow/invest_git_flow.png" alt="invest_git_flow.png" title>
+
+<ul>
+<li>里面涉及 4 种分支与两种角色</li>
+</ul>
+<h3 id="角色"><a href="#角色" class="headerlink" title="角色"></a>角色</h3><ul>
+<li>owner/master：对 merge request 单进行审核，在 master 分支上执行发布前的 git merge –squash 操作，可推送 master 分支、迭代分支、开发分支</li>
+<li>develop：开发分支负责人，可推送开发分支、迭代分支</li>
+</ul>
+<h3 id="分支"><a href="#分支" class="headerlink" title="分支"></a>分支</h3><ul>
+<li>master：长期存在，存放生产可靠代码，可以被 master 角色 push，可以被 master 角色 merge</li>
+<li>迭代分支：在迭代期存在，存放当次迭代的可测试代码，可以被 develop 角色 push，可以被 develop 角色 merge，命名实例：iter/yantianyu/202009/add_logs</li>
+<li>开发分支：在迭代期存在，存放当次迭代中具体需求实现代码，可以被 develop 角色 push，可以被 develop 角色 merge，合并入迭代分支后会被删除，命名实例：feature/yantianyu/202009/add_logs</li>
+<li>紧急补丁分支：非常规迭代期中存在，存放紧急修复代码，合并入 master 分支后被删除，命名实例：hotfix/yantianyu/202009/passport_fix</li>
+</ul>
+<h3 id="实施操作"><a href="#实施操作" class="headerlink" title="实施操作"></a>实施操作</h3><ul>
+<li>迭代开始前，迭代开发负责人/项目开发负责人 从 master 拉出迭代分支（比如 iter/jack/202008/add_logs）</li>
+<li>本次迭代中，各需求开发负责人从迭代分支上拉出自己的开发分支</li>
+<li>迭代分支根据实际情况把最新的 master 分支 rebase 进来（项目发版后执行 rebase 操作）</li>
+<li>具体开发负责人根据实际情况把最新的 iter 分支 rebase 进来</li>
+<li>各需求开发完成后，分支通过 merge request 合并入迭代分支，然后使用迭代分支进行提测，其中 merge request 单作为提测单中的 code review 物料；开发分支合并入迭代分支后，需要被删除，开发人员在迭代分支中拉出新开发分支。GIT 合并多个 commit 命令行操作</li>
+<li>上线阶段，迭代分支根据实际情况判断是否需要 rebase master 分支，确保迭代分支合并入 master 分支时没有冲突。然后提交 iter 分支合并入 master 分支的 mr</li>
+</ul>
+<h3 id="合并分支"><a href="#合并分支" class="headerlink" title="合并分支"></a>合并分支</h3><ul>
+<li>基本概念：master 分支是迭代分支、开发分支、紧急补丁分支的上游分支，迭代分支是开发分支的上游分支。紧急补丁分支不是迭代分支的下游分支</li>
+<li>上游分支获取下游分支代码，使用 merge 操作，比如 master 分支获取 iter/yantianyu/202009/add_logs 分支代码。在当前规范下：<ul>
+<li>master 分支获取 iter 分支代码，由 master 角色在 master 分支上执行 git merge –squash iter，提交后推送至远程。这样操作的目的，是保持 master 分支上的节点清晰明了</li>
+<li>iter 分支获取 feature 分支代码，通过提交 merge quest 单完成，且 merge quest 单完成后，及时通知统一迭代分支下各个开发分支负责人，及时 把自身的开发分支 rebase 至迭代分支的最新节点。这样操作的目的，是为了保持迭代分支中的增量代码，始终被 review 过，且产生一个 code review 记录</li>
+</ul>
+</li>
+<li>下游分支获取上游分支代码，使用 rebase 操作，比如开发分支 feature/tianyu.yan/202008/xxxx 获取 iter/202008/xxxx 分支代码。由开发人员自行在开发分支上，执行 git rebase iter/202008/xxxx</li>
+</ul>
+<h3 id="code-review"><a href="#code-review" class="headerlink" title="code review"></a>code review</h3><ul>
+<li>使用 mr 单进行 code review, 以下是 mr 单模版</li>
+<li>mr 单会带着 CI 执行结果，CI 运行不成功，则 MR 单不可合并</li>
+<li>.gitlab/merge_request_templates/BUG_FIX.md</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">### 这个 PR 做了</span><br><span class="line"></span><br><span class="line">&lt;!-- 列表 --&gt;</span><br><span class="line"></span><br><span class="line">1. xxx</span><br><span class="line">2. xxx</span><br><span class="line">3. 。。。</span><br><span class="line"></span><br><span class="line">### 自测报告</span><br><span class="line"></span><br><span class="line">| 模块 | 场景 | 表现 | 结果 |</span><br><span class="line">| ---- | ---- | ---- | ---- |</span><br><span class="line">| ?    | ?    | ?    | ok?  |</span><br><span class="line"></span><br><span class="line">### 这个 PR 涉及什么模块</span><br><span class="line"></span><br><span class="line">&lt;!-- 请填写涉及的模块 --&gt;</span><br><span class="line"></span><br><span class="line">### 其它需要 Reviewer 知晓的内容：</span><br><span class="line"></span><br><span class="line">&lt;!-- 其它需要补充的内容 --&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>.gitlab/merge_request_templates/MERGE_REQUEST.md</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">### 这个 PR 做了 BUG FIX</span><br><span class="line"></span><br><span class="line">### 自测报告</span><br><span class="line"></span><br><span class="line">&lt;!-- 请填写禅道中真实的 Bug ID --&gt;</span><br><span class="line"></span><br><span class="line">| BUG ID                                           | 表现 | 结果 |</span><br><span class="line">| ------------------------------------------------ | ---- | :--: |</span><br><span class="line">| [xxx](http://zen.in.za/zentao/bug-view-xxx.html) | ?    | ok?  |</span><br><span class="line"></span><br><span class="line">### 这个 PR 涉及什么模块</span><br><span class="line"></span><br><span class="line">&lt;!-- 请填写涉及的模块 --&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="git-提交信息规范"><a href="#git-提交信息规范" class="headerlink" title="git 提交信息规范"></a>git 提交信息规范</h3><ul>
+<li>git 提交信息检查会在 pre-commit 阶段进行</li>
+<li>例子</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit -m &apos;feat: add footer&apos;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">  &apos;docs&apos;, // Adds or alters documentation. 仅仅修改了文档，比如README, CHANGELOG, CONTRIBUTE等等</span><br><span class="line">  &apos;chore&apos;, // Other changes that don&apos;t modify src or test files. 改变构建流程、或者增加依赖库、工具等</span><br><span class="line">  &apos;feat&apos;, // Adds a new feature. 新增feature</span><br><span class="line">  &apos;fix&apos;, // Solves a bug. 修复bug</span><br><span class="line">  &apos;merge&apos;, // Merge branch ? of ?.</span><br><span class="line">  &apos;perf&apos;, // Improves performance. 优化相关，比如提升性能、体验</span><br><span class="line">  &apos;refactor&apos;, // Rewrites code without feature, performance or bug changes. 代码重构，没有加新功能或者修复bug</span><br><span class="line">  &apos;revert&apos;, // Reverts a previous commit. 回滚到上一个版本</span><br><span class="line">  &apos;style&apos;, // Improves formatting, white-space. 仅仅修改了空格、格式缩进、逗号等等，不改变代码逻辑</span><br><span class="line">  &apos;test&apos;, // Adds or modifies tests. 测试用例，包括单元测试、集成测试等</span><br><span class="line">],</span><br></pre></td></tr></table></figure>
+
+<h2 id="代码检查"><a href="#代码检查" class="headerlink" title="代码检查"></a>代码检查</h2><ul>
+<li>代码检查，使用统一 eslint 规则 eslint-config-zati</li>
+<li>代码检查指令会在 pre-commit 阶段、CI 阶段运行</li>
+<li>pre-commit 阶段可被绕过，但 CI 阶段不可绕过</li>
+<li>CI 运行不通过，则此节点代码不可被合并入迭代分支</li>
+</ul>
+<h2 id="单元测试"><a href="#单元测试" class="headerlink" title="单元测试"></a>单元测试</h2><img src="/2020/11/25/invest-web-dev-flow/unit-test-cost.jpg" alt="unit-test-cost.jpg" title>
+
+<ul>
+<li>单元测试的确需要一定的成本，以 invest h5 项目实施情况来看，要达到 60%的测试覆盖率，测试代码与生产代码开发成本大致是 1:2</li>
+</ul>
+<h3 id="单元测试落地"><a href="#单元测试落地" class="headerlink" title="单元测试落地"></a>单元测试落地</h3><img src="/2020/11/25/invest-web-dev-flow/unit-test-running.gif" alt="unit-test-running.gif" title>
+
+<ul>
+<li><p>针对上述问题对应的测试用例，基本可以分为以下几种：</p>
+<ul>
+<li>纯函数测试：测试工具类纯函数是否符合预期</li>
+<li>展示性测试：用于测试组件内容是否正常展示，展示的各项内容是否完整、正确</li>
+<li>交互性测试：用于测试组件涉及的交互，是否可以正常输出，正常输出，并对输入、输出做校验</li>
+<li>快照测试：快照测试让开发人员明确自身对组件的修改，会有多大的波及度，具体可看<a href="https://jestjs.io/docs/en/snapshot-testing" target="_blank" rel="noopener">Snapshot Testing</a></li>
+</ul>
+</li>
+<li><p>其中交互测试是成本最高的测试，可以再细分为下面几种：</p>
+<ul>
+<li>涉及 dom 操作的交互测试</li>
+<li>涉及 bom 操作的交互测试</li>
+<li>涉及 service api 的操作交互测试</li>
+</ul>
+</li>
+<li><p>另外，针对当前团队技术栈，还需要在 redux 场景下进行测试</p>
+</li>
+<li><p>上述测试用例具体实践方式，可以看 <a href="https://evanhongyousan.github.io/2020/10/11/react-react-router-react-redux-unit-test/">react+react-router+react-redux 项目单元测试实践记录</a></p>
+</li>
+<li><p>在具体实际中，针对一个组件的测试代码，其交互测试与其他测试测试代码对比，一般会是 6:1</p>
+</li>
+</ul>
+<h3 id="测试覆盖检查"><a href="#测试覆盖检查" class="headerlink" title="测试覆盖检查"></a>测试覆盖检查</h3><ul>
+<li><p>测试覆盖概念说明</p>
+<ul>
+<li>行覆盖率（line coverage）</li>
+<li>函数覆盖率（function coverage）</li>
+<li>分支覆盖率（branch coverage）</li>
+<li>语句覆盖率（statement coverage）</li>
+</ul>
+</li>
+<li><p>这是目前全量单元测试覆盖率限制，各个指标未满足覆盖度，则单元测试指令返回失败</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">coverageThreshold: &#123;</span><br><span class="line">  global: &#123;</span><br><span class="line">    branches: 50,</span><br><span class="line">    functions: 60,</span><br><span class="line">    lines: 65,</span><br><span class="line">    statements: 65</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>当前 invest h5 项目测试覆盖率情况</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">=============================== Coverage summary ===============================</span><br><span class="line">Statements   : 69.52% ( 1909/2746 )</span><br><span class="line">Branches     : 53.2% ( 623/1171 )</span><br><span class="line">Functions    : 65.72% ( 508/773 )</span><br><span class="line">Lines        : 69.97% ( 1859/2657 )</span><br><span class="line">================================================================================</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>可以通过详细报告，查看各文件测试覆盖情况<img src="/2020/11/25/invest-web-dev-flow/test_coverage.gif" alt="test_coverage.gif" title>
+
+</li>
+</ul>
+<h2 id="CI-执行结果推送"><a href="#CI-执行结果推送" class="headerlink" title="CI 执行结果推送"></a>CI 执行结果推送</h2><img src="/2020/11/25/invest-web-dev-flow/pipeline-email.png" alt="pipeline-email.png" title>
+
+<h2 id="当前-git-工作流、代码校验、单元测试、持续集成的结合"><a href="#当前-git-工作流、代码校验、单元测试、持续集成的结合" class="headerlink" title="当前 git 工作流、代码校验、单元测试、持续集成的结合"></a>当前 git 工作流、代码校验、单元测试、持续集成的结合</h2><img src="/2020/11/25/invest-web-dev-flow/ivnest_web_work_flow.png" alt="ivnest_web_work_flow.png" title>
+
+<h3 id="待完成事项"><a href="#待完成事项" class="headerlink" title="待完成事项"></a>待完成事项</h3><ul>
+<li>CI 还未进行提交信息校验和分支名校验</li>
+<li>接入统一 code lint 规则 eslint-config-zati</li>
+<li>CI 根据最新 gitlab 特性进行调整</li>
+<li>对接 CD</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+      
+        <div id="reward-container">
+  <div>众筹开高达</div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/wechatpay.jpg" alt="evanhongyousan 微信支付">
+        <p>微信支付</p>
+      </div>
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/alipay.jpg" alt="evanhongyousan 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/gitlab-CI/" rel="tag"><i class="fa fa-tag"></i> gitlab CI</a>
+            
+              <a href="/tags/unit-test/" rel="tag"><i class="fa fa-tag"></i> unit test</a>
+            
+              <a href="/tags/CI/" rel="tag"><i class="fa fa-tag"></i> CI</a>
+            
+              <a href="/tags/git-flow/" rel="tag"><i class="fa fa-tag"></i> git flow</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2020/11/19/unit-test-and-gitlab-ci/" rel="next" title="单元测试与持续集成实践记录">
+                  <i class="fa fa-chevron-left"></i> 单元测试与持续集成实践记录
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2020/12/02/how-https-works/" rel="prev" title="【翻译】https如何工作">
+                  【翻译】https如何工作 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    
+  <div class="comments" id="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80NjM2MC8yMjg3MQ=="></div>
+  </div>
+  
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc" data-target="post-toc-wrap">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#git-开发模式"><span class="nav-number">2.</span> <span class="nav-text">git 开发模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#角色"><span class="nav-number">2.1.</span> <span class="nav-text">角色</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分支"><span class="nav-number">2.2.</span> <span class="nav-text">分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实施操作"><span class="nav-number">2.3.</span> <span class="nav-text">实施操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#合并分支"><span class="nav-number">2.4.</span> <span class="nav-text">合并分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#code-review"><span class="nav-number">2.5.</span> <span class="nav-text">code review</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git-提交信息规范"><span class="nav-number">2.6.</span> <span class="nav-text">git 提交信息规范</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码检查"><span class="nav-number">3.</span> <span class="nav-text">代码检查</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#单元测试"><span class="nav-number">4.</span> <span class="nav-text">单元测试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#单元测试落地"><span class="nav-number">4.1.</span> <span class="nav-text">单元测试落地</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试覆盖检查"><span class="nav-number">4.2.</span> <span class="nav-text">测试覆盖检查</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CI-执行结果推送"><span class="nav-number">5.</span> <span class="nav-text">CI 执行结果推送</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#当前-git-工作流、代码校验、单元测试、持续集成的结合"><span class="nav-number">6.</span> <span class="nav-text">当前 git 工作流、代码校验、单元测试、持续集成的结合</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#待完成事项"><span class="nav-number">6.1.</span> <span class="nav-text">待完成事项</span></a></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/avatar.jpg"
+      alt="evanhongyousan">
+  <p class="site-author-name" itemprop="name">evanhongyousan</p>
+  <div class="site-description" itemprop="description">With some fe dev skills blog writed by Evan</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">53</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">77</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/EvanHongYousan" title="GitHub &rarr; https://github.com/EvanHongYousan" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:1370204201@qq.com" title="E-Mail &rarr; mailto:1370204201@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://www.douban.com/people/185733944/" title="豆瓣 &rarr; https://www.douban.com/people/185733944/" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>豆瓣</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://steamcommunity.com/profiles/76561198254399899/" title="Steam &rarr; https://steamcommunity.com/profiles/76561198254399899/" rel="noopener" target="_blank"><i class="fa fa-fw fa-steam"></i>Steam</a>
+      </span>
+    
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2025</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">evanhongyousan</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">139k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:52</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+    <span class="post-meta-divider">|</span>
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+    
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='132' src="//cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-nest@1/canvas-nest.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.ui.min.js"></script>
+  <style>
+    .darkmode-toggle {
+      z-index: 9999;
+    }
+    img, .darkmode-ignore {
+      isolation: isolate;
+      display: block;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.3.4/lib/darkmode-js.min.js"></script>
+  <script>
+  var options = {
+    bottom: '64px', // default: '32px'
+    right: '32px', // default: '32px'
+    left: 'unset', // default: 'unset'
+    time: '0.3s', // default: '0.3s'
+    mixColor: '#fff', // default: '#fff'
+    backgroundColor: '#fff',  // default: '#fff'
+    buttonColorDark: '#100f2c',  // default: '#100f2c'
+    buttonColorLight: '#fff', // default: '#fff'
+    saveInCookies: true, // default: true,
+    label: '🌙', // default: ''🌓
+    autoMatchOsTheme: true // default: true
+  }
+  var darkmode = new Darkmode(options);
+  darkmode.showWidget();
+  </script><script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/utils.js?v=7.3.0"></script><script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/motion.js?v=7.3.0"></script>
+<script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/schemes/muse.js?v=7.3.0"></script>
+<script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/next-boot.js?v=7.3.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/local-search.js?v=7.3.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script>
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script>
+
+</body>
+</html>

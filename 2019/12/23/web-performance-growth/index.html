@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-WBPBHQ3');</script>
+  <!-- End Google Tag Manager -->
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+  <meta name="baidu-site-verification" content="Qf3lafOaKG">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/css/main.css?v=7.3.0">
+
+<link rel="stylesheet" href="//fonts.loli.net/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="//cdn.bootcdn.net/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-minimal.css">
+  <script src="//cdn.jsdelivr.net/npm/pace-js@1/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="当前 web 应用访问速度过慢，用户等待时间过长，对用户体验造成很大影响。而用户访问 web 页面等待时间过长，会降低用户对品牌的信任度，加大了品牌运营工作的困难度 另外，搜索引擎会降低加载速度过慢站点的权重，使站点曝光率下降">
+<meta name="keywords" content="webpack,性能,cdn,部署,gulp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一次web性能优化实施记录">
+<meta property="og:url" content="https://evanhongyousan.github.io/2019/12/23/web-performance-growth/index.html">
+<meta property="og:site_name" content="Evan&#39;s Blog | An FE developer&#39;s Blog">
+<meta property="og:description" content="当前 web 应用访问速度过慢，用户等待时间过长，对用户体验造成很大影响。而用户访问 web 页面等待时间过长，会降低用户对品牌的信任度，加大了品牌运营工作的困难度 另外，搜索引擎会降低加载速度过慢站点的权重，使站点曝光率下降">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://evanhongyousan.github.io/2019/12/23/web-performance-growth/loading.gif">
+<meta property="og:updated_time" content="2025-01-03T07:09:24.925Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="一次web性能优化实施记录">
+<meta name="twitter:description" content="当前 web 应用访问速度过慢，用户等待时间过长，对用户体验造成很大影响。而用户访问 web 页面等待时间过长，会降低用户对品牌的信任度，加大了品牌运营工作的困难度 另外，搜索引擎会降低加载速度过慢站点的权重，使站点曝光率下降">
+<meta name="twitter:image" content="https://evanhongyousan.github.io/2019/12/23/web-performance-growth/loading.gif">
+  <link rel="alternate" href="/atom.xml" title="Evan's Blog | An FE developer's Blog" type="application/atom+xml">
+  <link rel="canonical" href="https://evanhongyousan.github.io/2019/12/23/web-performance-growth/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>一次web性能优化实施记录 | Evan's Blog | An FE developer's Blog</title>
+  <meta name="generator" content="Hexo 3.9.0">
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WBPBHQ3"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Evan's Blog | An FE developer's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档<span class="badge">53</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类<span class="badge">1</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签<span class="badge">77</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-books">
+      
+    
+      
+    
+
+    <a href="/books/" rel="section"><i class="menu-item-icon fa fa-fw fa-book"></i> <br>阅读</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-movies">
+      
+    
+      
+    
+
+    <a href="/movies/" rel="section"><i class="menu-item-icon fa fa-fw fa-film"></i> <br>电影</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-games">
+      
+    
+      
+    
+
+    <a href="/games/" rel="section"><i class="menu-item-icon fa fa-fw fa-gamepad"></i> <br>游戏</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-steam">
+      
+    
+      
+    
+
+    <a href="/steamgames/" rel="section"><i class="menu-item-icon fa fa-fw fa-brands fa-steam"></i> <br>steam</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-bangumis">
+      
+    
+      
+    
+
+    <a href="/bangumis/" rel="section"><i class="menu-item-icon fa fa-fw fa-brands fa-bilibili"></i> <br>bangumis</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-cinemas">
+      
+    
+      
+    
+
+    <a href="/cinemas/" rel="section"><i class="menu-item-icon fa fa-fw fa-brands fa-youtube"></i> <br>cinemas</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+    
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="https://evanhongyousan.github.io/2019/12/23/web-performance-growth/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="evanhongyousan">
+      <meta itemprop="description" content="With some fe dev skills blog writed by Evan">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Evan's Blog | An FE developer's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">一次web性能优化实施记录
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-12-23 19:56:12" itemprop="dateCreated datePublished" datetime="2019-12-23T19:56:12+08:00">2019-12-23</time>
+            </span>
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/tech/" itemprop="url" rel="index"><span itemprop="name">tech</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            <span class="post-meta-item" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">本文字数：</span>
+              
+              <span>2.2k</span>
+            </span>
+          
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              
+              <span>4 分钟</span>
+            </span>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <img src="/2019/12/23/web-performance-growth/loading.gif" alt="loading.gif" title>
+<p>当前 web 应用访问速度过慢，用户等待时间过长，对用户体验造成很大影响。而用户访问 web 页面等待时间过长，会降低用户对品牌的信任度，加大了品牌运营工作的困难度</p>
+<p>另外，搜索引擎会降低加载速度过慢站点的权重，使站点曝光率下降</p>
+<a id="more"></a>
+
+<h3 id="项目部署配置检查"><a href="#项目部署配置检查" class="headerlink" title="项目部署配置检查"></a>项目部署配置检查</h3><ul>
+<li>检查当前 cdn 节点部署地区</li>
+<li>构建出来的文件如何与 cdn 节点部署对应上</li>
+<li>图片资源是否有压缩，页面是否有很多小请求</li>
+<li>js、css 打包是否有优化空间</li>
+</ul>
+<h3 id="图片解析压缩优化"><a href="#图片解析压缩优化" class="headerlink" title="图片解析压缩优化"></a>图片解析压缩优化</h3><h4 id="压缩"><a href="#压缩" class="headerlink" title="压缩"></a>压缩</h4><p>工具选型</p>
+<ul>
+<li>gulp-imagemin</li>
+<li>gulp-smushit</li>
+<li>gulp-tinypng-compress</li>
+</ul>
+<p>压缩率对比</p>
+<ul>
+<li>gulp-imagemin:<ul>
+<li>可处理 jpg、png、svg、gif</li>
+<li>整体压缩率 27.5%，针对 svg 压缩率为 44.9%</li>
+<li>压缩时间短：2 分钟内</li>
+</ul>
+</li>
+<li>gulp-smushit:<ul>
+<li>只能处理 jpg、png、gif，不能处理 svg</li>
+<li>压缩率高，57.1%</li>
+<li>仔细扣图片细节，能看到一点点色差</li>
+<li>压缩时间长：半小时左右<ul>
+<li>原因：使用 resmush.it 的 api 压缩图片</li>
+</ul>
+</li>
+<li>网络请求断开会直接显示压缩完成，无异常抛出</li>
+</ul>
+</li>
+<li>gulp-tinypng-compress<ul>
+<li>压缩时间长：半小时左右</li>
+<li>原因：使用<a href="https://tinypng.com/的api压缩图片" target="_blank" rel="noopener">https://tinypng.com/的api压缩图片</a></li>
+<li>以使用 API 的方式，每月只能压 500 张</li>
+<li>网络请求断开时会有异常抛出</li>
+</ul>
+</li>
+</ul>
+<p>结论</p>
+<ul>
+<li>最后决定使用 gulp-imagemin 做本地图片压缩</li>
+</ul>
+<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>改动背景</p>
+<ul>
+<li>由 webpack 对资源做统一解析输出管理，可减少开发人员对资源发布目录的管理工作量</li>
+</ul>
+<p>目标</p>
+<ul>
+<li>小图片皆转为 base64 code，以减少 http 请求</li>
+<li>新的图片解析方式不影响原有图片引用方式</li>
+</ul>
+<p>工具确认</p>
+<ul>
+<li>url-loader</li>
+<li>svg-url-loader</li>
+<li>image-webpack-plugin</li>
+</ul>
+<p>解析输出 hash name 的影响</p>
+<ul>
+<li>对同一张图片做解析输出，其 hash name 会保持不变，故浏览器缓存对同一图片可生效</li>
+</ul>
+<p>改动说明</p>
+<ul>
+<li>webpack 输出文件夹改为 cdn 文件夹</li>
+<li>gulp 中的 clean task 取消</li>
+<li>gulp 只负责压缩图片，并把图片复制至 cdn 文件夹</li>
+<li>被 webpack 解析到的图片（jpg、png、gif、svg）会被压缩</li>
+</ul>
+<p>对开发的影响</p>
+<ul>
+<li>后续静态资源（比如图片），可和对应业务 js、css 文件放到同一业务文件夹中，由 webpack 统一解析处理</li>
+<li>原有图片引用方式仍然生效，但不建议继续使用</li>
+</ul>
+<h3 id="css、js-打包优化"><a href="#css、js-打包优化" class="headerlink" title="css、js 打包优化"></a>css、js 打包优化</h3><p>改动背景</p>
+<ul>
+<li>站点页面在进行载入时，除了当前页面外，也会载入其他页面的 js、css 资源，阻碍了页面的尽快展示</li>
+</ul>
+<p>目标</p>
+<ul>
+<li>在进行页面载入时，只载入页面本身的必须资源</li>
+</ul>
+<p>选型</p>
+<ul>
+<li>多页面架构，每个页面自行引入、管理其资源</li>
+<li>按路由进行动态加载模块，使非必须模块不影响页面渲染</li>
+<li>寻找 webpack loader、插件，在 webpack 进行打包时自动按路由对资源做切分</li>
+</ul>
+<p>分析</p>
+<ul>
+<li>当前项目是单页面+ssr 架构项目，已经有一定的代码积累</li>
+<li>多页面架构控制资源简单，但对当前项目改动太大</li>
+<li>按路由进行模块动态加载，需要在业务代码中的模块引入处做处理，对当前项目改动也非常大 – import() 语法</li>
+<li>在查询 webpack 代码分割相关信息过程中，发现业界偏向于以代码功能、类库作为代码分割点，未发现以路由作为代码分割点的解决方案</li>
+</ul>
+<p>决策</p>
+<ul>
+<li>故本次对 css、js 的打包优化，便先遵循业界常用做法：把经常变动的业务代码与不大变动的第三方类库代码分割</li>
+</ul>
+<p>改动说明</p>
+<ul>
+<li>目前，react、react-dom、react-intl、mirrorx、intl、antd、antd-mobile、svgo 这些类库已在项目中被锁死版本号，故这部分类库的 js、css 会被单独抽出合并为 common-vendors.js、common-vendors.css，属于长时间不变动的缓存</li>
+<li>其余 node_modules 中的类库会被抽出合并为 vendor.js、vendor.css，属于较长时间不变动的缓存</li>
+<li>剩余业务代码被合并为 app.js、app.css，变动较为频繁</li>
+</ul>
+<p>改动影响</p>
+<ul>
+<li>对用户：在已经访问过站点后，站点若有变动，则只需重新载入变动过的业务代码即可</li>
+<li>对开发：无影响</li>
+</ul>
+<h3 id="按需加载-polyfill"><a href="#按需加载-polyfill" class="headerlink" title="按需加载 polyfill"></a>按需加载 polyfill</h3><p>改动背景</p>
+<ul>
+<li>目前站点打包 js，把整个 polyfill 打入。但项目实际并未用到所有 polyfill 提供的特性。</li>
+</ul>
+<p>选型</p>
+<ul>
+<li>方案一：babel6 升级至 babel 7，使用 babel 7 提供的新特性：静态分析项目中的代码，开发者使用到相关特性，再把对应 polyfill 打入</li>
+<li>方案二：使用第三方 polyfill 服务，引入第三方 polyfill 时，会自动根据浏览器特性针对性注入 polyfill，我们不再把 polyfill 打包进去</li>
+<li>方案三：方案二改进版 – 自建 polyfill 服务</li>
+</ul>
+<p>分析</p>
+<ul>
+<li>方案一：项目使用 babel 6 及其配套插件，需要升级到 babel 7，升级过程估计有不少问题，且有些问题可能比较难被发现</li>
+<li>方案二：工作量小，不易出错。不做静态代码分析，按浏览器特性补齐 polyfill。依赖于第三方服务，第三方服务出问题，我们的站点马上就会挂掉</li>
+<li>方案三：稳定性比方案二高，其余特性与方案二一致</li>
+</ul>
+<p>决策</p>
+<ul>
+<li>业务对稳定性有高要求的选方案一，否则选方案二</li>
+<li>本次选方案一</li>
+</ul>
+<p>改动说明</p>
+<ul>
+<li>使用 babel-upgrade 执行 babel 6 到 babel 7 的升级</li>
+<li>webpack 中 babel 相关配置项被改动</li>
+</ul>
+<p>改动影响</p>
+<ul>
+<li>使用 babel 6 打包出来的 js 代码，总大小为 3415KB, 使用 babel 7 且使用 useBuiltIns: usage 配置打包出来的 js 代码，总大小为 2662Kb – js 体积减少 22%</li>
+<li>对开发：无影响</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+      
+        <div id="reward-container">
+  <div>众筹开高达</div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/wechatpay.jpg" alt="evanhongyousan 微信支付">
+        <p>微信支付</p>
+      </div>
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/alipay.jpg" alt="evanhongyousan 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/webpack/" rel="tag"><i class="fa fa-tag"></i> webpack</a>
+            
+              <a href="/tags/性能/" rel="tag"><i class="fa fa-tag"></i> 性能</a>
+            
+              <a href="/tags/cdn/" rel="tag"><i class="fa fa-tag"></i> cdn</a>
+            
+              <a href="/tags/部署/" rel="tag"><i class="fa fa-tag"></i> 部署</a>
+            
+              <a href="/tags/gulp/" rel="tag"><i class="fa fa-tag"></i> gulp</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/08/30/webpack-config/" rel="next" title="webpack config">
+                  <i class="fa fa-chevron-left"></i> webpack config
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/12/25/how-to-change-file-name-case/" rel="prev" title="处理git无法检测文件名大小写变动问题">
+                  处理git无法检测文件名大小写变动问题 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    
+  <div class="comments" id="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80NjM2MC8yMjg3MQ=="></div>
+  </div>
+  
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc" data-target="post-toc-wrap">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#项目部署配置检查"><span class="nav-number">1.</span> <span class="nav-text">项目部署配置检查</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图片解析压缩优化"><span class="nav-number">2.</span> <span class="nav-text">图片解析压缩优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#压缩"><span class="nav-number">2.1.</span> <span class="nav-text">压缩</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#解析"><span class="nav-number">2.2.</span> <span class="nav-text">解析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#css、js-打包优化"><span class="nav-number">3.</span> <span class="nav-text">css、js 打包优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#按需加载-polyfill"><span class="nav-number">4.</span> <span class="nav-text">按需加载 polyfill</span></a></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/avatar.jpg"
+      alt="evanhongyousan">
+  <p class="site-author-name" itemprop="name">evanhongyousan</p>
+  <div class="site-description" itemprop="description">With some fe dev skills blog writed by Evan</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">53</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">77</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/EvanHongYousan" title="GitHub &rarr; https://github.com/EvanHongYousan" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:1370204201@qq.com" title="E-Mail &rarr; mailto:1370204201@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://www.douban.com/people/185733944/" title="豆瓣 &rarr; https://www.douban.com/people/185733944/" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>豆瓣</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://steamcommunity.com/profiles/76561198254399899/" title="Steam &rarr; https://steamcommunity.com/profiles/76561198254399899/" rel="noopener" target="_blank"><i class="fa fa-fw fa-steam"></i>Steam</a>
+      </span>
+    
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2025</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">evanhongyousan</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">139k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:52</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+    <span class="post-meta-divider">|</span>
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+    
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='132' src="//cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-nest@1/canvas-nest.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.ui.min.js"></script>
+  <style>
+    .darkmode-toggle {
+      z-index: 9999;
+    }
+    img, .darkmode-ignore {
+      isolation: isolate;
+      display: block;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.3.4/lib/darkmode-js.min.js"></script>
+  <script>
+  var options = {
+    bottom: '64px', // default: '32px'
+    right: '32px', // default: '32px'
+    left: 'unset', // default: 'unset'
+    time: '0.3s', // default: '0.3s'
+    mixColor: '#fff', // default: '#fff'
+    backgroundColor: '#fff',  // default: '#fff'
+    buttonColorDark: '#100f2c',  // default: '#100f2c'
+    buttonColorLight: '#fff', // default: '#fff'
+    saveInCookies: true, // default: true,
+    label: '🌙', // default: ''🌓
+    autoMatchOsTheme: true // default: true
+  }
+  var darkmode = new Darkmode(options);
+  darkmode.showWidget();
+  </script><script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/utils.js?v=7.3.0"></script><script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/motion.js?v=7.3.0"></script>
+<script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/schemes/muse.js?v=7.3.0"></script>
+<script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/next-boot.js?v=7.3.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="https://cdn.jsdelivr.net/gh/evanhongyousan/evanhongyousan.github.io/js/local-search.js?v=7.3.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script>
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script>
+
+</body>
+</html>
